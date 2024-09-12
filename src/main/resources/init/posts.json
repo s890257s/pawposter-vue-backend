@@ -1,0 +1,32 @@
+[
+  {
+    "memberId": 1,
+    "postContent": "<p>今天帶狗狗去公園玩了，它特別喜歡追逐球球！<figure class='image'><img src='http://localhost:port/api/image/A'></figure></p>",
+    "createdAt": "2024-08-22T08:00:00Z",
+    "updatedAt": "2024-08-22T08:00:00Z"
+  },
+  {
+    "memberId": 2,
+    "postContent": "<p>剛買了一隻新寵物鼠，它的小眼睛超級可愛！</p><figure class='image'><img src='http://localhost:port/api/image/B'></figure>",
+    "createdAt": "2024-08-22T09:30:00Z",
+    "updatedAt": "2024-08-22T09:30:00Z"
+  },
+  {
+    "memberId": 3,
+    "postContent": "<p>最近發現我的貓咪喜歡趴在鍵盤上，這樣我要怎麼工作啊？</p><figure class='image'><img src='http://localhost:port/api/image/C'></figure>",
+    "createdAt": "2024-08-22T10:15:00Z",
+    "updatedAt": "2024-08-22T10:15:00Z"
+  },
+  {
+    "memberId": 4,
+    "postContent": "<p>兔子真的很會吃菜，兩分鐘就啃光了一整片葉子。</p><figure class='image'><img src='http://localhost:port/api/image/D'></figure>",
+    "createdAt": "2024-08-22T11:45:00Z",
+    "updatedAt": "2024-08-22T11:45:00Z"
+  },
+  {
+    "memberId": 5,
+    "postContent": "<p>每天回家，狗狗總是最先迎接我的，感覺很溫暖。</p><figure class='image'><img src='http://localhost:port/api/image/F'></figure>",
+    "createdAt": "2024-08-22T13:00:00Z",
+    "updatedAt": "2024-08-22T13:00:00Z"
+  }
+]

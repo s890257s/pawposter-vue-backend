@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paw Poster</title>
+
+    <!-- bootstrap 5.1.1 css -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+      crossorigin="anonymous"
+    />
+
+    <!-- bootstrap 5.1.1 js -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- 自訂css -->
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <!-- 主顯示畫面 -->
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5 main-color">
+      <div class="row align-items-center g-lg-5 py-5">
+        <!-- 歡迎文字 -->
+        <div class="col-lg-7 text-center text-lg-start">
+          <h1 class="display-5 fw-bold lh-1 mb-4">Paw Poster!</h1>
+          <p class="col-lg-10 fs-5">
+            Paw Poster
+            是一個專為寵物愛好者設計的社群平台，使用者可以自由分享寵物的日常照片、影片及故事，並與其他愛寵人士交流互動。
+          </p>
+        </div>
+
+        <!-- 登入表單 -->
+        <div class="col-md-10 mx-auto col-lg-5">
+          <div class="p-4 p-md-5 border rounded-3 bg-light">
+            <!-- 帳號 -->
+            <div class="form-floating mb-3">
+              <input
+                type="email"
+                class="form-control"
+                placeholder="name@example.com"
+              />
+              <label for="floatingInput">Email</label>
+            </div>
+            <!-- 密碼 -->
+            <div class="form-floating mb-3">
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Password"
+              />
+              <label for="floatingPassword">密碼</label>
+            </div>
+            <!-- 記住我 -->
+            <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox" value="remember-me" /> Remember me
+              </label>
+            </div>
+            <!-- 小字條款提示 -->
+            <div class="text-center">
+              <small class="text-muted"
+                >登入即表示您同意 PawPoster 的 <a href="#">服務條款</a>
+              </small>
+            </div>
+            <!-- 登入按鈕 -->
+            <a href="./post_feed.html">
+              <button class="w-100 btn btn-lg secondary-color-1">登入</button>
+            </a>
+            <hr class="mt-4 mb-1" />
+
+            <div class="row">
+              <!-- 忘記密碼 -->
+              <div class="col">
+                <small class="text-muted">
+                  <a href="#">忘記密碼?</a>
+                </small>
+              </div>
+              <!-- 註冊新帳號 -->
+              <div class="col text-end">
+                <small class="text-muted">
+                  <a href="./sign_up.html">註冊新帳號</a>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

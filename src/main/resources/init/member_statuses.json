@@ -1,0 +1,10 @@
+[
+  {
+    "memberStatusId": "1",
+    "memberStatus": "Active"
+  },
+  {
+    "memberStatusId": "2",
+    "memberStatus": "Inactive"
+  }
+]

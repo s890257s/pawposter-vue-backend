@@ -1,0 +1,92 @@
+[
+  {
+    "commentId": 1,
+    "memberId": 6,
+    "postId": 1,
+    "commentContent": "狗狗一定玩得很開心吧！你用什麼球跟它玩呢？",
+    "createdAt": "2024-08-23T14:22:00Z",
+    "updatedAt": "2024-08-23T14:22:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 2,
+    "memberId": 7,
+    "postId": 1,
+    "commentContent": "真羨慕！我家的狗狗只喜歡睡覺。",
+    "createdAt": "2024-08-24T09:18:00Z",
+    "updatedAt": "2024-08-24T09:18:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 3,
+    "memberId": 8,
+    "postId": 2,
+    "commentContent": "寵物鼠真是越看越可愛！你給它取名字了嗎？",
+    "createdAt": "2024-08-25T11:35:00Z",
+    "updatedAt": "2024-08-25T11:35:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 4,
+    "memberId": 9,
+    "postId": 2,
+    "commentContent": "我家的鼠也有同款，特別喜歡啃東西。",
+    "createdAt": "2024-08-26T08:44:00Z",
+    "updatedAt": "2024-08-26T08:44:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 5,
+    "memberId": 10,
+    "postId": 3,
+    "commentContent": "哈哈，貓咪真是個小淘氣！",
+    "createdAt": "2024-08-27T16:50:00Z",
+    "updatedAt": "2024-08-27T16:50:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 6,
+    "memberId": 6,
+    "postId": 3,
+    "commentContent": "抓尾巴的畫面肯定很搞笑，有錄下來嗎？",
+    "createdAt": "2024-08-28T10:02:00Z",
+    "updatedAt": "2024-08-28T10:02:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 7,
+    "memberId": 7,
+    "postId": 4,
+    "commentContent": "兔子啃菜的速度真的是驚人！你家兔子最喜歡吃什麼？",
+    "createdAt": "2024-08-29T13:30:00Z",
+    "updatedAt": "2024-08-29T13:30:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 8,
+    "memberId": 8,
+    "postId": 4,
+    "commentContent": "下次可以試試給它吃胡蘿蔔，看它反應如何。",
+    "createdAt": "2024-08-30T07:45:00Z",
+    "updatedAt": "2024-08-30T07:45:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 9,
+    "memberId": 9,
+    "postId": 5,
+    "commentContent": "狗狗真的是最忠誠的夥伴，總是等著我們回家。",
+    "createdAt": "2024-08-31T17:12:00Z",
+    "updatedAt": "2024-08-31T17:12:00Z",
+    "isDeleted": false
+  },
+  {
+    "commentId": 10,
+    "memberId": 10,
+    "postId": 5,
+    "commentContent": "每天回家看到狗狗開心的樣子，所有疲勞都消失了！",
+    "createdAt": "2024-09-01T09:26:00Z",
+    "updatedAt": "2024-09-01T09:26:00Z",
+    "isDeleted": false
+  }
+]

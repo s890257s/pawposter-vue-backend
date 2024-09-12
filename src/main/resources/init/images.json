@@ -1,0 +1,22 @@
+[
+  {
+    "imageName": "A",
+    "path": "classpath:init\\images\\dog\\dog-阿財.jpg"
+  },
+  {
+    "imageName": "B",
+    "path": "classpath:init\\images\\rat\\rat-糖糖.jpg"
+  },
+  {
+    "imageName": "C",
+    "path": "classpath:init\\images\\cat\\cat-皮皮.jpg"
+  },
+  {
+    "imageName": "D",
+    "path": "classpath:init\\images\\rabbit\\rabbit-咩咩.jpg"
+  },
+  {
+    "imageName": "E",
+    "path": "classpath:init\\images\\dog\\dog-阿毛.jpg"
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "memberName": "John Doe",
+    "memberMail": "john@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T10:00:00",
+    "loggedInAt": "2024-08-15T12:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "1997-03-05",
+      "memberGender": "Male",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Jane Smith",
+    "memberMail": "jane@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T11:00:00",
+    "loggedInAt": "2024-08-15T13:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "1990-09-15",
+      "memberGender": "Female",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Michael Johnson",
+    "memberMail": "michael@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T12:00:00",
+    "loggedInAt": "2024-08-15T14:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "1995-03-03",
+      "memberGender": "Male",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Zoe Davis",
+    "memberMail": "zoe@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T13:00:00",
+    "loggedInAt": "2024-08-15T15:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "2001-06-10",
+      "memberGender": "Female",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "David Brown",
+    "memberMail": "david@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T14:00:00",
+    "loggedInAt": "2024-08-15T16:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "1962-11-29",
+      "memberGender": "Male",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Sophia Wilson",
+    "memberMail": "sophia@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T15:00:00",
+    "loggedInAt": "2024-08-15T17:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "1994-12-06",
+      "memberGender": "Female",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "James Miller",
+    "memberMail": "james@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T16:00:00",
+    "loggedInAt": "2024-08-15T18:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "2000-07-15",
+      "memberGender": "Male",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Olivia Taylor",
+    "memberMail": "olivia@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T17:00:00",
+    "loggedInAt": "2024-08-15T19:00:00",
+    "memberStatus": {
+      "memberStatusId": 1,
+      "memberStatus": "Active"
+    },
+    "memberDetail": {
+      "memberBirthday": "2000-08-23",
+      "memberGender": "Female",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Andrew Lee",
+    "memberMail": "andrew@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T18:00:00",
+    "loggedInAt": "2024-08-15T20:00:00",
+    "memberStatus": {
+      "memberStatusId": 2,
+      "memberStatus": "Inactive"
+    },
+    "memberDetail": {
+      "memberBirthday": "1991-04-09",
+      "memberGender": "Male",
+      "memberPhoto": null
+    }
+  },
+  {
+    "memberName": "Isabella Harris",
+    "memberMail": "isabella@example.com",
+    "memberPassword": "1234",
+    "createdAt": "2024-08-15T19:00:00",
+    "loggedInAt": "2024-08-15T21:00:00",
+    "memberStatus": {
+      "memberStatusId": 2,
+      "memberStatus": "Inactive"
+    },
+    "memberDetail": {
+      "memberBirthday": "1992-01-10",
+      "memberGender": "Female",
+      "memberPhoto": null
+    }
+  }
+]

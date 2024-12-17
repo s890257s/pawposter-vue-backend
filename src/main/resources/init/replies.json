@@ -1,0 +1,68 @@
+[
+  {
+    "replyText": "狗狗一定玩得很開心吧！你用什麼球跟牠玩呢？",
+    "isDeleted": false,
+    "post": { "postId": 1 },
+    "member": { "memberId": 6 }
+  },
+  {
+    "replyText": "真羨慕！我家的狗狗只喜歡睡覺。",
+    "isDeleted": false,
+    "post": { "postId": 1 },
+    "member": { "memberId": 5 }
+  },
+  {
+    "replyText": "天竺鼠真是越看越可愛！你給牠取名字了嗎？",
+    "isDeleted": false,
+    "post": { "postId": 2 },
+    "member": { "memberId": 4 }
+  },
+  {
+    "replyText": "我家的天竺鼠也有同款，特別喜歡啃東西。",
+    "isDeleted": false,
+    "post": { "postId": 2 },
+    "member": { "memberId": 3 }
+  },
+  {
+    "replyText": "哈哈，貓咪真是個小淘氣！",
+    "isDeleted": false,
+    "post": { "postId": 3 },
+    "member": { "memberId": 5 }
+  },
+  {
+    "replyText": "畫面肯定很搞笑，有錄下來嗎？",
+    "isDeleted": false,
+    "post": { "postId": 3 },
+    "member": { "memberId": 2 }
+  },
+  {
+    "replyText": "兔子啃菜的速度真是驚人！",
+    "isDeleted": false,
+    "post": { "postId": 4 },
+    "member": { "memberId": 1 }
+  },
+  {
+    "replyText": "下次可以試試給它吃胡蘿蔔，看牠反應如何。",
+    "isDeleted": false,
+    "post": { "postId": 4 },
+    "member": { "memberId": 2 }
+  },
+  {
+    "replyText": "狗狗真的是最忠誠的夥伴，總是等著我們回家。",
+    "isDeleted": false,
+    "post": { "postId": 5 },
+    "member": { "memberId": 6 }
+  },
+  {
+    "replyText": "每天回家看到狗狗開心的樣子，所有疲勞都消失了！",
+    "isDeleted": false,
+    "post": { "postId": 5 },
+    "member": { "memberId": 3 }
+  },
+  {
+    "replyText": "阿阿阿阿阿",
+    "isDeleted": true,
+    "post": { "postId": 5 },
+    "member": { "memberId": 2 }
+  }
+]

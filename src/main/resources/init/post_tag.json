@@ -1,0 +1,62 @@
+[
+  {
+    "post": { "postId": "1" },
+    "tag": { "tagId": "1" }
+  },
+  {
+    "post": { "postId": "1" },
+    "tag": { "tagId": "2" }
+  },
+  {
+    "post": { "postId": "1" },
+    "tag": { "tagId": "3" }
+  },
+  {
+    "post": { "postId": "2" },
+    "tag": { "tagId": "4" }
+  },
+  {
+    "post": { "postId": "2" },
+    "tag": { "tagId": "5" }
+  },
+  {
+    "post": { "postId": "2" },
+    "tag": { "tagId": "6" }
+  },
+  {
+    "post": { "postId": "3" },
+    "tag": { "tagId": "7" }
+  },
+  {
+    "post": { "postId": "3" },
+    "tag": { "tagId": "8" }
+  },
+  {
+    "post": { "postId": "3" },
+    "tag": { "tagId": "9" }
+  },
+  {
+    "post": { "postId": "4" },
+    "tag": { "tagId": "10" }
+  },
+  {
+    "post": { "postId": "4" },
+    "tag": { "tagId": "11" }
+  },
+  {
+    "post": { "postId": "4" },
+    "tag": { "tagId": "12" }
+  },
+  {
+    "post": { "postId": "5" },
+    "tag": { "tagId": "13" }
+  },
+  {
+    "post": { "postId": "5" },
+    "tag": { "tagId": "14" }
+  },
+  {
+    "post": { "postId": "5" },
+    "tag": { "tagId": "1" }
+  }
+]

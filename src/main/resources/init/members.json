@@ -1,0 +1,62 @@
+[
+  {
+    "memberName": "Alice",
+    "memberMail": "alice@mail.com",
+    "memberPassword": "1234",
+    "isEnabled": "true",
+    "memberDetail": {
+      "memberBirthday": "1999-02-12",
+      "memberGender": "female"
+    }
+  },
+  {
+    "memberName": "Bob",
+    "memberMail": "bob@mail.com",
+    "memberPassword": "1234",
+    "isEnabled": "true",
+    "memberDetail": {
+      "memberBirthday": "1996-11-02",
+      "memberGender": "male"
+    }
+  },
+  {
+    "memberName": "Carol",
+    "memberMail": "carol@mail.com",
+    "memberPassword": "1234",
+    "isEnabled": "true",
+    "memberDetail": {
+      "memberBirthday": "1991-03-09",
+      "memberGender": "male"
+    }
+  },
+  {
+    "memberName": "Dave",
+    "memberMail": "dave@mail.com",
+    "memberPassword": "1234",
+    "isEnabled": "true",
+    "memberDetail": {
+      "memberBirthday": "1960-09-20",
+      "memberGender": "male"
+    }
+  },
+  {
+    "memberName": "Eve",
+    "memberMail": "carol@mail.com",
+    "memberPassword": "1234",
+    "isEnabled": "true",
+    "memberDetail": {
+      "memberBirthday": "2002-06-30",
+      "memberGender": "female"
+    }
+  },
+  {
+    "memberName": "Zoe",
+    "memberMail": "zoe@mail.com",
+    "memberPassword": "1234",
+    "isEnabled": "true",
+    "memberDetail": {
+      "memberBirthday": "1990-04-15",
+      "memberGender": "female"
+    }
+  }
+]

@@ -1,0 +1,60 @@
+[
+  {
+    "postText": "今天帶狗狗去公園玩，牠特別喜歡追球球！",
+    "member": {
+      "memberId": "1"
+    },
+    "postResources": [
+      {
+        "filePath": "classpath:init\\image\\post-1-1.jpg"
+      },
+      {
+        "filePath": "classpath:init\\image\\post-1-2.jpg"
+      }
+    ]
+  },
+  {
+    "postText": "剛買了一隻新天竺鼠，牠的小眼睛超級可愛！",
+    "member": {
+      "memberId": "2"
+    },
+    "postResources": [
+      {
+        "filePath": "classpath:init\\image\\post-2-1.jpg"
+      }
+    ]
+  },
+  {
+    "postText": "最近發現我的貓咪喜歡趴在鍵盤上，這樣我要怎麼工作啊？",
+    "member": {
+      "memberId": "3"
+    },
+    "postResources": [
+      {
+        "filePath": "classpath:init\\image\\post-3-1.jpg"
+      }
+    ]
+  },
+  {
+    "postText": "兔子真的很會吃菜，兩分鐘就啃光了一整片葉子。",
+    "member": {
+      "memberId": "4"
+    },
+    "postResources": [
+      {
+        "filePath": "classpath:init\\image\\post-4-1.jpg"
+      }
+    ]
+  },
+  {
+    "postText": "每天回家，狗狗總是最先迎接我的，感覺很溫暖。",
+    "member": {
+      "memberId": "5"
+    },
+    "postResources": [
+      {
+        "filePath": "classpath:init\\image\\post-5-1.jpg"
+      }
+    ]
+  }
+]

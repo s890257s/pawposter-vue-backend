@@ -1,5 +1,6 @@
 package tw.pers.allen.pawposter.model.dto;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.BeanUtils;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.MemberDetail;
+import tw.pers.allen.pawposter.tools.CommonTool;
 
 @NoArgsConstructor
 @Getter
@@ -18,6 +20,12 @@ public class MemberDto {
 	public MemberDto(Member member) {
 		BeanUtils.copyProperties(member, this);
 		BeanUtils.copyProperties(member.getMemberDetail(), this);
+
+		try {
+			this.memberPhoto = CommonTool.convertByteArrayToBase64String(member.getMemberDetail().getMemberPhoto());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String memberName;
@@ -34,7 +42,7 @@ public class MemberDto {
 
 	private String memberGender;
 
-	private byte[] memberPhoto;
+	private String memberPhoto;
 
 	public Member toMember() {
 		Member member = new Member();

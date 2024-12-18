@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ import tw.pers.allen.pawposter.repository.PostRepository;
 import tw.pers.allen.pawposter.repository.PostTagRepository;
 import tw.pers.allen.pawposter.repository.ReplyRepository;
 import tw.pers.allen.pawposter.repository.TagRepository;
-import tw.pers.allen.pawposter.tools.JwtTool;
+import tw.pers.allen.pawposter.tools.BCryptEncryptionTool;
 
 @Component
 public class Initialize implements ApplicationListener<ContextRefreshedEvent> {
@@ -52,17 +51,8 @@ public class Initialize implements ApplicationListener<ContextRefreshedEvent> {
 		this.replyRepository = replyRepository;
 	}
 
-	@Autowired
-	private JwtTool jwtTool;
-
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-
-		String token = jwtTool.generateToken("1");
-
-		System.out.println(jwtTool.getValue(
-				"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJpYXQiOjE3MzQ0MjgyNDUsImV4cCI6MTczNDQzMTg0NSwiREREIjoiZWUifQ.dmJcOOLByYOOUXZWc5kPE4qV0TJA2NjRo1vZWBp5qYI",
-				"sub"));
 
 		try {
 			readAndCreateMember();
@@ -95,6 +85,9 @@ public class Initialize implements ApplicationListener<ContextRefreshedEvent> {
 
 			// 設定圖片
 			memberDetail.setMemberPhoto(FileCopyUtils.copyToByteArray(file));
+
+			// 密碼加密
+			member.setMemberPassword(BCryptEncryptionTool.encrypt(member.getMemberPassword()));
 
 			// 互設關聯
 			memberDetail.setMember(member);
@@ -170,7 +163,6 @@ public class Initialize implements ApplicationListener<ContextRefreshedEvent> {
 
 		postTagRepository.saveAll(postTags);
 		log.info("新增 post_tag 資料完成");
-
 	}
 
 	/**

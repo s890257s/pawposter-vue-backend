@@ -10,11 +10,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-@Component
 public class JwtTool {
 
-	private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("DoNotGoGentleIntoThatGoodSecurityKey".getBytes());
-	private final int EXPIRATION_IN_SECONDS = 60 * 60;
+	private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("DoNotGoGentleIntoThatGoodSecurityKey".getBytes());
+	private static final int EXPIRATION_IN_SECONDS = 60 * 60;
 
 	/**
 	 * 產生 JWT Token。
@@ -22,7 +21,7 @@ public class JwtTool {
 	 * @param memberId 使用者的唯一識別碼，將作為 JWT Token 的 subject。
 	 * @return 生成的 JWT Token 字串。
 	 */
-	public String generateToken(String memberId) {
+	public static String generateToken(String memberId) {
 		return Jwts.builder() // 使用 builder 模式設定 token
 				.subject(memberId) // 設定 token 主題 (Subject)，用以標識使用者
 				.issuedAt(new Date()) // 設定 token 發行時間
@@ -31,7 +30,7 @@ public class JwtTool {
 				.compact(); // 生成 JWT token
 	}
 
-	private Claims getClaims(String token) {
+	private static Claims getClaims(String token) {
 		return Jwts.parser() // 使用 parser() 取得解析器
 				.verifyWith(SECRET_KEY) // 設定解密用密鑰
 				.build() // 建立解析器
@@ -39,11 +38,17 @@ public class JwtTool {
 				.getPayload(); // 取得解析後結果
 	}
 
-	public String getSubject(String token) {
+	public static String getSubject(String token) {
 		return getClaims(token).getSubject();
 	};
 
-	public String getValue(String token,String key) {
+	public static String getValue(String token, String key) {
 		return (String) getClaims(token).get(key);
+	}
+
+	public static Boolean isTokenValid(String token) {
+		getSubject(token); // 若 token 有任何異常，則由 jjwt 套件直接拋出錯誤。
+
+		return true; // 能走到回傳表示驗證通過，token 合法
 	}
 }

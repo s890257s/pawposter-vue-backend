@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class Member extends AbstractAuditEntity {
 
 	private String memberName;
 
+	@Column(unique = true)
 	private String memberMail;
 
 	private String memberPassword;

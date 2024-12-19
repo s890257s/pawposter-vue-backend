@@ -102,7 +102,7 @@ public class MemberService {
 
 		Member member = getById(memberId);
 
-		memberRepository.deleteById(member.getMemberId());
+		memberRepository.delete(member);
 
 		return new MemberDto(member);
 	}

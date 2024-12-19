@@ -37,6 +37,8 @@ public class MemberDto {
 
 	}
 
+	private Integer memberId;
+
 	private String memberName;
 
 	@NotBlank(message = "屬性不得為空")

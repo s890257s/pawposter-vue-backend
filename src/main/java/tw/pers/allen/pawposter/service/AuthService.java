@@ -3,14 +3,12 @@ package tw.pers.allen.pawposter.service;
 import java.util.Date;
 import java.util.Objects;
 
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 import tw.pers.allen.pawposter.exception.runtime.AccountDisabledException;
 import tw.pers.allen.pawposter.exception.runtime.IncorrectAccountOrPasswordException;
 import tw.pers.allen.pawposter.model.dto.EmailAndPasswordDto;
 import tw.pers.allen.pawposter.model.dto.LoggedInMemberDto;
-import tw.pers.allen.pawposter.model.dto.MemberDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.repository.MemberRepository;
 import tw.pers.allen.pawposter.tools.BCryptEncryptionTool;

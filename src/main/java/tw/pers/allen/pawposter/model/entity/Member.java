@@ -40,9 +40,9 @@ public class Member extends AbstractAuditEntity {
 	@OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 	private MemberDetail memberDetail;
 
-	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Post> posts = new ArrayList<>();
 
-	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Reply> replies = new ArrayList<>();
 }

@@ -35,7 +35,7 @@ public class SecurityConfig {
 		corsConfiguration.setAllowedHeaders(List.of("*"));
 
 		// 設定開放的 URL，無須登入
-		List<String> allowedURL = List.of("/test/**", "/api/auth/**");
+		List<String> allowedURL = List.of("/test/**", "/api/auth/**", "/api/**");
 
 		return http // 使用 HttpSecurity http 物件展開串聯設定
 				.cors(cros -> cros.configurationSource(request -> corsConfiguration)) // 使用自訂的 corsConfiguration

@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 public class EmailAndPasswordDto {
 
-	@NotBlank(message = "email 不得為空")
+	@NotBlank(message = "屬性不得為空")
 	private String email;
 
-	@NotBlank(message = "password 不得為空")
+	@NotBlank(message = "屬性不得為空")
 	private String password;
 }

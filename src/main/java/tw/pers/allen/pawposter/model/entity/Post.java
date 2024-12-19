@@ -29,16 +29,16 @@ public class Post extends AbstractAuditEntity {
 
 	private String postText;
 
-	@OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private List<PostResource> postResources = new ArrayList<>();
 
 	@ManyToOne
 	@JoinColumn(name = "fk_member_id", foreignKey = @ForeignKey(name = "fk_member_post", foreignKeyDefinition = "FOREIGN KEY (fk_member_id) REFERENCES Member(member_id) ON DELETE CASCADE ON UPDATE CASCADE"))
 	private Member member;
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private List<PostTag> postTags = new ArrayList<>();
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private List<Reply> replies = new ArrayList<>();
 }

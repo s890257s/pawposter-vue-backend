@@ -1,12 +1,21 @@
 package tw.pers.allen.pawposter.tools;
 
+import java.beans.PropertyDescriptor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class CommonTool {
 
+	/**
+	 * 將圖片的 byte[] 轉換成 base64 格式的圖片
+	 */
 	public static String convertByteArrayToBase64String(byte[] data) throws IOException {
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(data);
@@ -18,5 +27,26 @@ public class CommonTool {
 		String base64String = Base64.getEncoder().encodeToString(data);
 
 		return "data:%s;base64,%s".formatted(mimeType, base64String);
+	}
+
+	/**
+	 * 回傳某物件中，所有為 null 值的屬性名稱。
+	 * 
+	 * @return String[] nullProperties
+	 */
+	public static String[] getNullPropertyNames(Object source) {
+
+		final BeanWrapper src = new BeanWrapperImpl(source);
+		PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+		List<String> emptyNames = new ArrayList<>();
+		for (PropertyDescriptor pd : pds) {
+			Object srcValue = src.getPropertyValue(pd.getName());
+			if (srcValue == null) {
+				emptyNames.add(pd.getName());
+			}
+		}
+
+		return emptyNames.toArray(new String[0]);
 	}
 }

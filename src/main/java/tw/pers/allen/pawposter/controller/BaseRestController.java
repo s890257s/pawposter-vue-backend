@@ -2,8 +2,6 @@ package tw.pers.allen.pawposter.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +20,7 @@ public interface BaseRestController<T> {
 	@GetMapping("/{id}")
 	T getById(@PathVariable Integer id);
 
-	@GetMapping("/")
+	@GetMapping
 	List<T> getAll();
 
 	@GetMapping("/page")
@@ -32,7 +30,7 @@ public interface BaseRestController<T> {
 			@RequestParam(defaultValue = "id") String sort // 升冪 asc 或降冪 desc
 	);
 
-	@PostMapping("/")
+	@PostMapping
 	T create(@Valid @RequestBody T object);
 
 	@PutMapping("/{id}")

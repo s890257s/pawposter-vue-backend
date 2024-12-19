@@ -2,14 +2,13 @@ package tw.pers.allen.pawposter.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +19,7 @@ import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.service.MemberService;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/api/members")
 public class MemberController implements BaseRestController<MemberDto> {
 
 	private final MemberService memberService;
@@ -38,7 +37,7 @@ public class MemberController implements BaseRestController<MemberDto> {
 	}
 
 	@Override
-	@GetMapping("/")
+	@GetMapping
 	public List<MemberDto> getAll() {
 		return memberService.findAll();
 	}
@@ -58,28 +57,25 @@ public class MemberController implements BaseRestController<MemberDto> {
 	/* === Create === */
 
 	@Override
-	@PostMapping("/")
-	public MemberDto create(@Valid MemberDto object) {
-		// TODO Auto-generated method stub
-		return null;
+	@PostMapping
+	public MemberDto create(@Valid @RequestBody MemberDto memberDto) {
+		return memberService.insertMember(memberDto);
 	}
 
 	/* === Update === */
 
 	@Override
-	@PutMapping("/{id}")
-	public MemberDto update(@PathVariable Integer id, @Valid MemberDto object) {
-		// TODO Auto-generated method stub
-		return null;
+	@PutMapping("/{memberId}")
+	public MemberDto update(@PathVariable Integer memberId, @Valid @RequestBody MemberDto memberDto) {
+		return memberService.updateMember(memberId, memberDto);
 	}
 
 	/* === Delete === */
 
 	@Override
-	@DeleteMapping("/{id}")
-	public MemberDto delete(@PathVariable Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	@DeleteMapping("/{memberId}")
+	public MemberDto delete(@PathVariable Integer memberId) {
+		return memberService.deleteMember(memberId);
 	}
 
 	/* === Other === */

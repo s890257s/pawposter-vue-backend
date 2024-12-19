@@ -62,7 +62,7 @@ public class SecurityConfig {
 					 * Spring Security 的驗證在 Spring MVC 的執行流程之前進行。 </br>
 					 * 當驗證失敗（如未授權訪問或權限不足）時，Spring Security 會拋出錯誤， </br>
 					 * 但這些異常不會進入 MVC 層，因此無法被 GlobalExceptionHandler 捕獲。 </br>
-					 * 
+					 *
 					 * 故我們在此處使用 HandlerExceptionResolver 將異常轉發，<br>
 					 * 以便統一由全局異常處理器進行處理。
 					 */

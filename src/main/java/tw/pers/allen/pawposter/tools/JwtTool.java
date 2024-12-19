@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -40,7 +38,7 @@ public class JwtTool {
 
 	public static String getSubject(String token) {
 		return getClaims(token).getSubject();
-	};
+	}
 
 	public static String getValue(String token, String key) {
 		return (String) getClaims(token).get(key);

@@ -14,7 +14,7 @@ import lombok.Setter;
 public class AbstractAuditEntity {
 
 	private Date createdDate;
-	
+
 	private Date updatedDate;
 
 }

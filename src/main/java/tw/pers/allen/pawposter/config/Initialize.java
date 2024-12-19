@@ -181,5 +181,5 @@ public class Initialize implements ApplicationListener<ContextRefreshedEvent> {
 
 		replyRepository.saveAll(replies);
 		log.info("新增 replies 資料完成");
-	};
+	}
 }

@@ -1,7 +1,6 @@
 package tw.pers.allen.pawposter.model.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;

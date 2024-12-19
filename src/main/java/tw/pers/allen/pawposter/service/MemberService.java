@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import tw.pers.allen.pawposter.model.dto.MemberDto;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.entity.Member;
-import tw.pers.allen.pawposter.model.entity.MemberDetail;
 import tw.pers.allen.pawposter.repository.MemberRepository;
 import tw.pers.allen.pawposter.tools.CommonTool;
 

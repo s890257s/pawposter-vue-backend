@@ -31,7 +31,7 @@ public class CommonTool {
 
 	/**
 	 * 回傳某物件中，所有為 null 值的屬性名稱。
-	 * 
+	 *
 	 * @return String[] nullProperties
 	 */
 	public static String[] getNullPropertyNames(Object source) {

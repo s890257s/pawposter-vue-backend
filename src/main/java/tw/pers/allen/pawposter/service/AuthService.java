@@ -29,12 +29,13 @@ public class AuthService {
 				.orElseThrow(() -> new RuntimeException("登入失敗，使用者不存在。"));
 
 		// 帳號不符合
-		if (!Objects.equals(emailAndPasswordDto.getEmail(), member.getMemberMail())) {
-			throw new IncorrectAccountOrPasswordException();
-		}
+		boolean incorrectAccount = !Objects.equals(emailAndPasswordDto.getEmail(), member.getMemberMail());
 
 		// 密碼不符合
-		if (!BCryptEncryptionTool.verify(emailAndPasswordDto.getPassword(), member.getMemberPassword())) {
+		boolean incorrectPassword = !BCryptEncryptionTool.verify(emailAndPasswordDto.getPassword(),
+				member.getMemberPassword());
+
+		if (incorrectAccount || incorrectPassword) {
 			throw new IncorrectAccountOrPasswordException();
 		}
 

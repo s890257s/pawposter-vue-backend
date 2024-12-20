@@ -21,6 +21,7 @@ import tw.pers.allen.pawposter.model.entity.PostTag;
 import tw.pers.allen.pawposter.model.entity.Tag;
 import tw.pers.allen.pawposter.repository.MemberRepository;
 import tw.pers.allen.pawposter.repository.PostRepository;
+import tw.pers.allen.pawposter.repository.PostResourceRepository;
 import tw.pers.allen.pawposter.repository.PostTagRepository;
 import tw.pers.allen.pawposter.repository.TagRepository;
 import tw.pers.allen.pawposter.tools.EntityMapperTool.PostMapper;
@@ -31,21 +32,47 @@ public class PostService {
 	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
 	private final PostTagRepository postTagRepository;
+	private final PostResourceRepository postResourceRepository;
 	private final TagRepository tagRepository;
 
 	public PostService(PostRepository postRepository, PostTagRepository postTagRepository, TagRepository tagRepository,
-			MemberRepository memberRepository) {
+			MemberRepository memberRepository, PostResourceRepository postResourceRepository) {
 		this.memberRepository = memberRepository;
 		this.postRepository = postRepository;
 		this.postTagRepository = postTagRepository;
+		this.postResourceRepository = postResourceRepository;
 		this.tagRepository = tagRepository;
 	}
 
 	/* === private method === */
-	@Transactional
 	private Post getById(Integer postId) {
 		return postRepository.findById(postId)
 				.orElseThrow(() -> new RuntimeException("找不到貼文。id: %s".formatted(postId)));
+	}
+
+	private void setContentEmpty(PostDto postDto) {
+		postDto.setPostText("此貼文已被刪除");
+		postDto.setTagNames(Collections.emptyList());
+		postDto.setReplies(Collections.emptyList());
+		postDto.setResources(Collections.emptyList());
+	}
+
+	private PostDto filterDelete(PostDto postDto) {
+		if (postDto.getIsDeleted()) {
+			setContentEmpty(postDto);
+		}
+
+		return postDto;
+	}
+
+	private List<PostDto> filterDelete(List<PostDto> postDtos) {
+		postDtos.forEach(postDto->{
+			if(postDto.getIsDeleted()) {
+				setContentEmpty(postDto);
+			}
+		});
+
+		return postDtos;
 	}
 
 	/* === Read === */
@@ -56,7 +83,7 @@ public class PostService {
 	public PostDto findById(Integer postId) {
 		Post post = getById(postId);
 
-		return PostMapper.toDto(post);
+		return filterDelete(PostMapper.toDto(post));
 	}
 
 	/**
@@ -66,7 +93,7 @@ public class PostService {
 		List<Post> posts = postRepository.findAll();
 		List<PostDto> postDtos = posts.stream().map(PostMapper::toDto).toList();
 
-		return postDtos;
+		return filterDelete(postDtos);
 	}
 
 	/**
@@ -85,7 +112,7 @@ public class PostService {
 
 		Page<Post> pagePosts = postRepository.findAll(pageRequest);
 
-		Page<PostDto> pagePostDtos = pagePosts.map(PostMapper::toDto);
+		Page<PostDto> pagePostDtos = pagePosts.map(post -> filterDelete(PostMapper.toDto(post)));
 
 		return pagePostDtos;
 	}
@@ -103,7 +130,6 @@ public class PostService {
 				() -> new RuntimeException("無法新增 post，因找不到對應的 member。member id: %s".formatted(postDto.getMemberId())));
 
 		// STEP 2: 新增
-
 		// 建立 Post 實體
 		Post post = new Post();
 		post.setPostText(postDto.getPostText());
@@ -164,11 +190,7 @@ public class PostService {
 
 		// 將新 Tag 保存進資料庫
 		List<Tag> newTags = newTagNames.isEmpty() ? Collections.emptyList()
-				: tagRepository.saveAll(newTagNames.stream().map(name -> {
-					Tag tag = new Tag();
-					tag.setTagName(name);
-					return tag;
-				}).toList());
+				: tagRepository.saveAll(newTagNames.stream().map(Tag::new).toList());
 
 		// 合併已存在與新建 Tag
 		List<Tag> finalTags = new ArrayList<>(existingTags);
@@ -178,20 +200,50 @@ public class PostService {
 	}
 
 	/* === Update === */
+	@Transactional
 	public PostDto updatePost(Integer postId, PostDto postDto) {
+		Post existingPost = getById(postId);
 
-		Post post = new Post();
-		Post savedPost = postRepository.save(post);
+		// 更新文字
+		existingPost.setPostText(postDto.getPostText());
 
-		return PostMapper.toDto(savedPost);
+		// 更新附加檔案
+		postResourceRepository.deleteByPost(existingPost); // 先刪除舊關聯
+
+		List<PostResource> newResources = postDto.getResources().stream() // 流化
+				.map(PostMapper::toEntity) // 轉換成實體
+				.peek(r -> r.setPost(existingPost)).collect(Collectors.toList()); // 設定關聯
+		existingPost.setPostResources(newResources);
+
+		// 更新標籤
+		postTagRepository.deleteByPost(existingPost); // 先刪除舊關聯
+
+		List<Tag> tags = getTags(postDto.getTagNames());
+		List<PostTag> postTags = tags.stream().map(tag -> {
+			PostTag postTag = new PostTag();
+			postTag.setTag(tag);
+			postTag.setPost(existingPost);
+			return postTag;
+		}).collect(Collectors.toList());
+		existingPost.setPostTags(postTags);
+
+		Post updatedPost = postRepository.save(existingPost);
+
+		Post post = postRepository.findById(updatedPost.getPostId()).get();
+
+		return PostMapper.toDto(post);
 	}
 
 	/* === Delete === */
+	@Transactional
 	public PostDto deletePost(Integer postId) {
 
 		Post post = getById(postId);
 
-		postRepository.delete(post);
+		// 軟刪除
+		post.setIsDeleted(true);
+
+		postRepository.save(post);
 
 		return PostMapper.toDto(post);
 	}

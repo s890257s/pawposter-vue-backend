@@ -27,6 +27,10 @@ public class Tag extends AbstractAuditEntity {
 		this.tagId = tagId;
 	}
 
+	public Tag(String tagName) {
+		this.tagName = tagName;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer tagId;

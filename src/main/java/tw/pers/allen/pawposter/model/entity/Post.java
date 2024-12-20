@@ -16,14 +16,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import tw.pers.allen.pawposter.model.audit.AbstractAuditEntity;
 
 @Table
 @Entity
 @Getter
 @Setter
-@ToString(of = { "postId", "postText" })
 public class Post extends AbstractAuditEntity {
 
 	@Id
@@ -32,7 +30,9 @@ public class Post extends AbstractAuditEntity {
 
 	private String postText;
 
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Boolean isDeleted;
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<PostResource> postResources = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER)

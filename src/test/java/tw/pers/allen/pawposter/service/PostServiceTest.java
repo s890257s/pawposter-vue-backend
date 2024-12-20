@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
+import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
@@ -23,7 +25,7 @@ import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.tools.CommonTool;
 
 @SpringBootTest
-//@Transactional
+@Transactional
 class PostServiceTest {
 
 	Logger log = LoggerFactory.getLogger(PostServiceTest.class);
@@ -34,7 +36,7 @@ class PostServiceTest {
 	@Test
 	void testFindById() {
 
-		// 測試正常查找 id 與其關聯設定
+		// === 測試正常查找 id 與其關聯設定 ===
 		PostDto post = postService.findById(1);
 
 		// 檢查貼文者與其內容
@@ -57,6 +59,20 @@ class PostServiceTest {
 		List<Integer> actualReplyIds = post.getReplies().stream().map(ReplyDto::getReplyId).toList();
 		assertEquals(expectedReplyIds, actualReplyIds, "replies id 不符");
 
+		// === 測試查找刪除的貼文 ===
+		PostDto deletedPost = postService.findById(6);
+		assertEquals("Zoe", deletedPost.getMemberName(), "post 會員不符");
+		assertEquals("此貼文已被刪除", deletedPost.getPostText(), "post 內容不符");
+
+		// 檢查附加檔案
+		assertEquals(0, deletedPost.getResources().size(), "resources 數量不符");
+
+		// 檢查標籤
+		assertEquals(0, deletedPost.getTagNames().size(), "tag names 數量不符");
+
+		// 檢查回覆
+		assertEquals(0, deletedPost.getReplies().size(), "replies 數量不符");
+
 		log.info("PostService.findById 功能正常");
 	}
 
@@ -67,6 +83,22 @@ class PostServiceTest {
 		List<PostDto> posts = postService.findAll();
 
 		assertTrue(posts.size() > 0);
+
+		// 檢查刪除
+		List<PostDto> deletedPosts = posts.stream().filter(PostDto::getIsDeleted).toList();
+
+		deletedPosts.forEach(post -> {
+			assertEquals("此貼文已被刪除", post.getPostText(), "post 內容不符");
+
+			// 檢查附加檔案
+			assertEquals(0, post.getResources().size(), "resources 數量不符");
+
+			// 檢查標籤
+			assertEquals(0, post.getTagNames().size(), "tag names 數量不符");
+
+			// 檢查回覆
+			assertEquals(0, post.getReplies().size(), "replies 數量不符");
+		});
 
 		log.info("PostService.findAll 功能正常");
 	}
@@ -88,6 +120,23 @@ class PostServiceTest {
 		posts = postService.findByPaginated(paginatedDto);
 		assertEquals("最近發現我的貓咪喜歡趴在鍵盤上，這樣我要怎麼工作啊？", posts.getContent().get(0).getPostText());
 
+		// 檢查刪除
+		List<PostDto> deletedPosts = posts.stream().filter(PostDto::getIsDeleted).toList();
+
+		deletedPosts.forEach(post -> {
+			assertEquals("此貼文已被刪除", post.getPostText(), "post 內容不符");
+
+			// 檢查附加檔案
+			assertEquals(0, post.getResources().size(), "resources 數量不符");
+
+			// 檢查標籤
+			assertEquals(0, post.getTagNames().size(), "tag names 數量不符");
+
+			// 檢查回覆
+			assertEquals(0, post.getReplies().size(), "replies 數量不符");
+		});
+		
+		
 		log.info("PostService.findByPaginated 功能正常");
 	}
 
@@ -151,33 +200,56 @@ class PostServiceTest {
 		log.info("PostService.insertPost 功能正常");
 	}
 
-//	@Test
-//	void testUpdatePost() {
-//
-//		// 測試更新
-//		PostDto postDto = new PostDto();
-//		postDto.setPostName("Jim");
-//
-//		PostDto updatedPost = postService.updatePost(1, postDto);
-//		assertEquals(postDto.getPostName(), updatedPost.getPostName());
-//		assertEquals("alice@mail.com", updatedPost.getPostMail());
-//
-//		log.info("PostService.updatePost 功能正常");
-//	}
-//
-//	@Test
-//	void testDeletePost() {
-//
-//		// 測試刪除
-//		int initialPostCount = postService.findAll().size();
-//
-//		PostDto expectedDeletedPost = postService.deletePost(1);
-//		assertEquals("Alice", expectedDeletedPost.getPostName());
-//
-//		int finalPostCount = postService.findAll().size();
-//
-//		assertEquals(initialPostCount - 1, finalPostCount);
-//
-//		log.info("PostService.deletePost 功能正常");
-//	}
+	@Test
+	@AfterEach
+	void testUpdatePost() {
+		// === 測試全更新 ===
+		// 建立更新物件
+		PostDto postDto = new PostDto();
+		postDto.setPostText("更新貼文");
+
+		// 設定新圖片
+		try {
+
+			byte[] p1 = FileCopyUtils
+					.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\frontend_no_image.png"));
+			PostResourceDto postResourceDto1 = new PostResourceDto();
+			postResourceDto1.setResourceContent(p1);
+			postResourceDto1.setMimeType(CommonTool.guessMimeType(p1));
+
+			byte[] p2 = FileCopyUtils
+					.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\frontend_sing_up_image.png"));
+			PostResourceDto postResourceDto2 = new PostResourceDto();
+			postResourceDto2.setResourceContent(p2);
+			postResourceDto2.setMimeType(CommonTool.guessMimeType(p2));
+
+			postDto.setResources(List.of(postResourceDto1, postResourceDto2));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// 設定新標籤
+		List<String> tagNames = List.of("兔兔", "貪吃鬼", "更新", "UpdatePost");
+		postDto.setTagNames(tagNames);
+
+		PostDto updatedPost = postService.updatePost(1, postDto);
+		assertEquals(1, updatedPost.getMemberId(), "更新後的 member id 不該改變");
+		assertEquals("Alice", updatedPost.getMemberName(), "更新後的 member name 不該改變");
+		assertEquals(1, updatedPost.getPostId(), "更新後的 post id 不該改變");
+		assertEquals("更新貼文", updatedPost.getPostText(), "更新貼文失敗");
+		assertEquals(updatedPost.getTagNames(), tagNames, "更新後的 tag name 不符");
+		assertEquals(2, updatedPost.getResources().size(), "更新後的 resource size 錯誤");
+
+		log.info("PostService.updatePost 功能正常");
+	}
+
+	@Test
+	void testDeletePost() {
+
+		PostDto deletePost = postService.deletePost(1);
+
+		assertTrue(deletePost.getIsDeleted());
+
+		log.info("PostService.deletePost 功能正常");
+	}
 }

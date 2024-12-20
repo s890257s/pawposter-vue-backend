@@ -1,6 +1,7 @@
 [
   {
     "postText": "今天帶狗狗去公園玩，牠特別喜歡追球球！",
+    "isDeleted": false,
     "member": {
       "memberId": "1"
     },
@@ -15,6 +16,7 @@
   },
   {
     "postText": "剛買了一隻新天竺鼠，牠的小眼睛超級可愛！",
+    "isDeleted": false,
     "member": {
       "memberId": "2"
     },
@@ -26,6 +28,7 @@
   },
   {
     "postText": "最近發現我的貓咪喜歡趴在鍵盤上，這樣我要怎麼工作啊？",
+    "isDeleted": false,
     "member": {
       "memberId": "3"
     },
@@ -37,6 +40,7 @@
   },
   {
     "postText": "兔子真的很會吃菜，兩分鐘就啃光了一整片葉子。",
+    "isDeleted": false,
     "member": {
       "memberId": "4"
     },
@@ -48,6 +52,7 @@
   },
   {
     "postText": "每天回家，狗狗總是最先迎接我的，感覺很溫暖。",
+    "isDeleted": false,
     "member": {
       "memberId": "5"
     },
@@ -56,5 +61,12 @@
         "filePath": "classpath:init\\image\\post-5-1.jpg"
       }
     ]
+  },
+  {
+    "postText": "哎呀打錯了",
+    "isDeleted": true,
+    "member": {
+      "memberId": "6"
+    }
   }
 ]

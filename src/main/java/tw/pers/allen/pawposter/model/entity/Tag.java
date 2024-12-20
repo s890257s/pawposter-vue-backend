@@ -3,6 +3,7 @@ package tw.pers.allen.pawposter.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,6 @@ public class Tag extends AbstractAuditEntity {
 	@Column(unique = true)
 	private String tagName;
 
-	@OneToMany(mappedBy = "tag")
+	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
 	private List<PostTag> postTags = new ArrayList<>();
 }

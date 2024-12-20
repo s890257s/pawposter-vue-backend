@@ -12,10 +12,6 @@ import tw.pers.allen.pawposter.model.entity.PostResource;
 @Setter
 public class PostResourceDto {
 
-	public PostResourceDto(PostResource postResource) {
-		BeanUtils.copyProperties(postResource, this);
-	}
-
 	private Integer postResourceId;
 
 	private String filePath;
@@ -24,9 +20,4 @@ public class PostResourceDto {
 
 	private byte[] resourceContent;
 
-	public PostResource toPostResource() {
-		PostResource postResource = new PostResource();
-		BeanUtils.copyProperties(this, postResource);
-		return postResource;
-	}
 }

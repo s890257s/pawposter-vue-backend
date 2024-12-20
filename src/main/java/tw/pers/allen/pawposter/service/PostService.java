@@ -6,21 +6,32 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.Post;
 import tw.pers.allen.pawposter.repository.PostRepository;
+import tw.pers.allen.pawposter.repository.PostTagRepository;
+import tw.pers.allen.pawposter.repository.TagRepository;
+import tw.pers.allen.pawposter.tools.EntityMapperTool;
 
 @Service
 public class PostService {
 
 	private final PostRepository postRepository;
+	private final PostTagRepository postTagRepository;
+	private final TagRepository tagRepository;
 
-	public PostService(PostRepository postRepository) {
+	public PostService(PostRepository postRepository, PostTagRepository postTagRepository,
+			TagRepository tagRepository) {
 		this.postRepository = postRepository;
+		this.postTagRepository = postTagRepository;
+		this.tagRepository = tagRepository;
 	}
 
 	/* === private method === */
+	@Transactional
 	private Post getById(Integer postId) {
 		return postRepository.findById(postId)
 				.orElseThrow(() -> new RuntimeException("找不到貼文。id: %s".formatted(postId)));
@@ -34,7 +45,7 @@ public class PostService {
 	public PostDto findById(Integer postId) {
 		Post post = getById(postId);
 
-		return new PostDto(post);
+		return EntityMapperTool.PostMapper.toDto(post);
 	}
 
 	/**
@@ -42,7 +53,7 @@ public class PostService {
 	 */
 	public List<PostDto> findAll() {
 		List<Post> posts = postRepository.findAll();
-		List<PostDto> postDtos = posts.stream().map(PostDto::new).toList();
+		List<PostDto> postDtos = posts.stream().map(EntityMapperTool.PostMapper::toDto).toList();
 
 		return postDtos;
 	}
@@ -63,27 +74,41 @@ public class PostService {
 
 		Page<Post> pagePosts = postRepository.findAll(pageRequest);
 
-		Page<PostDto> pagePostDtos = pagePosts.map(PostDto::new);
+		Page<PostDto> pagePostDtos = pagePosts.map(EntityMapperTool.PostMapper::toDto);
 
 		return pagePostDtos;
 	}
 
 	/* === Create === */
+	@Transactional
 	public PostDto insertPost(PostDto postDto) {
-		Post post = postDto.toPost();
+		// 準備保存用 entity
+		Post post = new Post();
+
+		// 設定貼文者
+		Member member = new Member();
+		member.setMemberId(postDto.getMemberId());
+		post.setMember(member);
+
+		// 設定附加檔案
+//		postDto.getResources().stream().map(r->{
+//			PostResource postResource = new PostResource();
+//			postResource.set
+//			
+//		})
 
 		Post savedPost = postRepository.save(post);
 
-		return new PostDto(savedPost);
+		return EntityMapperTool.PostMapper.toDto(savedPost);
 	}
 
 	/* === Update === */
 	public PostDto updatePost(Integer postId, PostDto postDto) {
 
-		Post post = postDto.toPost();
+		Post post = EntityMapperTool.PostMapper.toEntity(postDto);
 		Post savedPost = postRepository.save(post);
 
-		return new PostDto(savedPost);
+		return EntityMapperTool.PostMapper.toDto(savedPost);
 	}
 
 	/* === Delete === */
@@ -93,7 +118,7 @@ public class PostService {
 
 		postRepository.delete(post);
 
-		return new PostDto(post);
+		return EntityMapperTool.PostMapper.toDto(post);
 	}
 
 	/* === Other === */

@@ -41,7 +41,7 @@
   },
   {
     "memberName": "Eve",
-    "memberMail": "carol@mail.com",
+    "memberMail": "eve@mail.com",
     "memberPassword": "1234",
     "isEnabled": "true",
     "memberDetail": {

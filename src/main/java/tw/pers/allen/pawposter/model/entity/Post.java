@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,12 +16,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import tw.pers.allen.pawposter.model.audit.AbstractAuditEntity;
 
 @Table
 @Entity
 @Getter
 @Setter
+@ToString(of = { "postId", "postText" })
 public class Post extends AbstractAuditEntity {
 
 	@Id
@@ -29,16 +32,16 @@ public class Post extends AbstractAuditEntity {
 
 	private String postText;
 
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PostResource> postResources = new ArrayList<>();
 
 	@ManyToOne
 	@JoinColumn(name = "fk_member_id", foreignKey = @ForeignKey(name = "fk_member_post", foreignKeyDefinition = "FOREIGN KEY (fk_member_id) REFERENCES Member(member_id) ON DELETE CASCADE ON UPDATE CASCADE"))
 	private Member member;
 
-	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PostTag> postTags = new ArrayList<>();
 
-	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	private List<Reply> replies = new ArrayList<>();
 }

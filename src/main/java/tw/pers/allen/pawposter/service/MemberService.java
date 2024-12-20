@@ -12,6 +12,7 @@ import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.repository.MemberRepository;
 import tw.pers.allen.pawposter.tools.CommonTool;
+import tw.pers.allen.pawposter.tools.EntityMapperTool;
 
 @Service
 public class MemberService {
@@ -36,7 +37,7 @@ public class MemberService {
 	public MemberDto findById(Integer memberId) {
 		Member member = getById(memberId);
 
-		return new MemberDto(member);
+		return EntityMapperTool.MemberMapper.toDto(member);
 	}
 
 	/**
@@ -44,7 +45,7 @@ public class MemberService {
 	 */
 	public List<MemberDto> findAll() {
 		List<Member> members = memberRepository.findAll();
-		List<MemberDto> memberDtos = members.stream().map(MemberDto::new).toList();
+		List<MemberDto> memberDtos = members.stream().map(EntityMapperTool.MemberMapper::toDto).toList();
 
 		return memberDtos;
 	}
@@ -65,18 +66,18 @@ public class MemberService {
 
 		Page<Member> pageMembers = memberRepository.findAll(pageRequest);
 
-		Page<MemberDto> pageMemberDtos = pageMembers.map(MemberDto::new);
+		Page<MemberDto> pageMemberDtos = pageMembers.map(EntityMapperTool.MemberMapper::toDto);
 
 		return pageMemberDtos;
 	}
 
 	/* === Create === */
 	public MemberDto insertMember(MemberDto memberDto) {
-		Member member = memberDto.toMember();
+		Member member = EntityMapperTool.MemberMapper.toEntity(memberDto);
 
 		Member savedMember = memberRepository.save(member);
 
-		return new MemberDto(savedMember);
+		return EntityMapperTool.MemberMapper.toDto(savedMember);
 	}
 
 	/* === Update === */
@@ -94,7 +95,7 @@ public class MemberService {
 
 		Member savedMember = memberRepository.save(member);
 
-		return new MemberDto(savedMember);
+		return EntityMapperTool.MemberMapper.toDto(savedMember);
 	}
 
 	/* === Delete === */
@@ -104,7 +105,7 @@ public class MemberService {
 
 		memberRepository.delete(member);
 
-		return new MemberDto(member);
+		return EntityMapperTool.MemberMapper.toDto(member);
 	}
 
 	/* === Other === */

@@ -3,6 +3,8 @@ package tw.pers.allen.pawposter.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
 
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
@@ -18,9 +22,10 @@ import tw.pers.allen.pawposter.model.dto.PostDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.model.dto.TagDto;
+import tw.pers.allen.pawposter.tools.CommonTool;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 class PostServiceTest {
 
 	Logger log = LoggerFactory.getLogger(PostServiceTest.class);
@@ -47,12 +52,12 @@ class PostServiceTest {
 		// 檢查標籤
 		List<Integer> expectedTagIds = List.of(1, 2, 3);
 		List<Integer> actualTagIds = post.getTags().stream().map(TagDto::getTagId).toList();
-		assertEquals(expectedTagIds, actualTagIds, "Tag IDs do not match");
+		assertEquals(expectedTagIds, actualTagIds, "tags id 不符");
 
 		// 檢查回覆
 		List<Integer> expectedReplyIds = List.of(1, 2);
 		List<Integer> actualReplyIds = post.getReplies().stream().map(ReplyDto::getReplyId).toList();
-		assertEquals(expectedReplyIds, actualReplyIds, "Reply IDs do not match");
+		assertEquals(expectedReplyIds, actualReplyIds, "replies id 不符");
 
 		log.info("PostService.findById 功能正常");
 	}
@@ -88,28 +93,47 @@ class PostServiceTest {
 		log.info("PostService.findByPaginated 功能正常");
 	}
 
-//	@Test
-//	void testInsertPost() {
-//
-//		// 測試新增
-//		PostDto postDto = new PostDto();
-//		postDto.setMemberId(1);
-//		postDto.setMemberName("Alice");
-//		postDto.setPostText("hello world!");
-//
-//		byte[] photo = FileCopyUtils.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\post-1-1.jpg"));
-//		PostResourceDto postResourceDto = new PostResourceDto();
-//		postResourceDto.setResourceContent(photo);
-//		postResourceDto.setMimeType(CommonTool.guessMimeType(photo));
-//
-//		postDto.setResources(List.of(postResourceDto));
-//
-//		PostDto insertedPost = postService.insertPost(postDto);
-//		assertEquals(postDto.getPostName(), insertedPost.getPostName());
-//
-//		log.info("PostService.insertPost 功能正常");
-//	}
-//
+	@Test
+	void testInsertPost() {
+
+		// 建立貼文
+		PostDto postDto = new PostDto();
+		postDto.setPostText("hello world!");
+
+		// 設定貼文者
+		postDto.setMemberId(1);
+		postDto.setMemberName("Alice");
+
+		try {
+			// 設定貼文圖片
+			byte[] photo = FileCopyUtils.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\post-1-1.jpg"));
+			PostResourceDto postResourceDto = new PostResourceDto();
+			postResourceDto.setResourceContent(photo);
+			postResourceDto.setMimeType(CommonTool.guessMimeType(photo));
+			postDto.setResources(List.of(postResourceDto));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// 設定貼文標籤
+		// 新標籤
+		TagDto newTag = new TagDto();
+		newTag.setTagName("New Tag");
+
+		// 既存標籤
+		TagDto exsitTag = new TagDto();
+		exsitTag.setTagId(1);
+
+		postDto.setTags(List.of(newTag, exsitTag));
+
+		System.out.println(postDto);
+		
+		// 新增 貼文 + 附件 + 作者 + 標籤
+		PostDto insertedPost = postService.insertPost(postDto);
+
+		log.info("PostService.insertPost 功能正常");
+	}
+
 //	@Test
 //	void testUpdatePost() {
 //

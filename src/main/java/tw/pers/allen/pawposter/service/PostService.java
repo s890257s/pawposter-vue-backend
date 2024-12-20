@@ -1,30 +1,44 @@
 package tw.pers.allen.pawposter.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.TagDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.Post;
+import tw.pers.allen.pawposter.model.entity.PostResource;
+import tw.pers.allen.pawposter.model.entity.PostTag;
+import tw.pers.allen.pawposter.model.entity.Tag;
+import tw.pers.allen.pawposter.repository.MemberRepository;
 import tw.pers.allen.pawposter.repository.PostRepository;
 import tw.pers.allen.pawposter.repository.PostTagRepository;
 import tw.pers.allen.pawposter.repository.TagRepository;
-import tw.pers.allen.pawposter.tools.EntityMapperTool;
+import tw.pers.allen.pawposter.tools.EntityMapperTool.PostMapper;
+import tw.pers.allen.pawposter.tools.EntityMapperTool.TagMapper;
 
 @Service
 public class PostService {
 
+	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
 	private final PostTagRepository postTagRepository;
 	private final TagRepository tagRepository;
 
-	public PostService(PostRepository postRepository, PostTagRepository postTagRepository,
-			TagRepository tagRepository) {
+	public PostService(PostRepository postRepository, PostTagRepository postTagRepository, TagRepository tagRepository,
+			MemberRepository memberRepository) {
+		this.memberRepository = memberRepository;
 		this.postRepository = postRepository;
 		this.postTagRepository = postTagRepository;
 		this.tagRepository = tagRepository;
@@ -45,7 +59,7 @@ public class PostService {
 	public PostDto findById(Integer postId) {
 		Post post = getById(postId);
 
-		return EntityMapperTool.PostMapper.toDto(post);
+		return PostMapper.toDto(post);
 	}
 
 	/**
@@ -53,7 +67,7 @@ public class PostService {
 	 */
 	public List<PostDto> findAll() {
 		List<Post> posts = postRepository.findAll();
-		List<PostDto> postDtos = posts.stream().map(EntityMapperTool.PostMapper::toDto).toList();
+		List<PostDto> postDtos = posts.stream().map(PostMapper::toDto).toList();
 
 		return postDtos;
 	}
@@ -74,7 +88,7 @@ public class PostService {
 
 		Page<Post> pagePosts = postRepository.findAll(pageRequest);
 
-		Page<PostDto> pagePostDtos = pagePosts.map(EntityMapperTool.PostMapper::toDto);
+		Page<PostDto> pagePostDtos = pagePosts.map(PostMapper::toDto);
 
 		return pagePostDtos;
 	}
@@ -82,33 +96,97 @@ public class PostService {
 	/* === Create === */
 	@Transactional
 	public PostDto insertPost(PostDto postDto) {
-		// 準備保存用 entity
-		Post post = new Post();
+		// STEP 1: 資料檢查
+		// member 不得為空或不存在
+		if (postDto.getMemberId() == null) {
+			throw new RuntimeException("無法新增 post，因傳入的 member id 為空");
+		}
 
-		// 設定貼文者
+		memberRepository.findById(postDto.getMemberId()).orElseThrow(
+				() -> new RuntimeException("無法新增 post，因找不到對應的 member。member id: %s".formatted(postDto.getMemberId())));
+
+		// STEP 2: 新增
+
+		// 建立 Post 實體
+		Post post = new Post();
+		post.setPostText(postDto.getPostText());
+
 		Member member = new Member();
 		member.setMemberId(postDto.getMemberId());
 		post.setMember(member);
 
-		// 設定附加檔案
-//		postDto.getResources().stream().map(r->{
-//			PostResource postResource = new PostResource();
-//			postResource.set
-//			
-//		})
+		// 設定 Post 附帶檔案
+		List<PostResource> postResources = postDto.getResources().stream() // 流化
+				.map(PostMapper::toEntity) // 轉換成實體
+				.peek(r -> r.setPost(post)).toList(); // 設定關聯
+		post.setPostResources(postResources);
 
+		// 標籤處理
+		List<Tag> tags = getTags(postDto.getTagNames());
+
+		// 建立 Post 與 Tag 關聯
+		List<PostTag> postTags = tags.stream().map(tag -> {
+			PostTag postTag = new PostTag();
+			postTag.setTag(tag);
+			postTag.setPost(post);
+			return postTag;
+		}).toList();
+		post.setPostTags(postTags);
+
+		// 保存 Post
 		Post savedPost = postRepository.save(post);
 
-		return EntityMapperTool.PostMapper.toDto(savedPost);
+		Member m = memberRepository.findById(savedPost.getMember().getMemberId()).get();
+		savedPost.setMember(m);
+
+		return PostMapper.toDto(savedPost);
+	}
+
+	/**
+	 * 將標籤名稱轉換成對應的 Tag Entity
+	 */
+	private List<Tag> getTags(List<String> tagNames) {
+		if (tagNames == null) {
+			return Collections.emptyList();
+		}
+
+		// 去除重複並清理字串
+		List<String> distinctTagNames = tagNames.stream().filter(Objects::nonNull).map(String::trim)
+				.filter(name -> !name.isEmpty()).distinct().toList();
+
+		if (distinctTagNames.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		// 查詢已存在的 Tag
+		List<Tag> existingTags = tagRepository.findByTagNameIn(distinctTagNames);
+		Set<String> existingTagNames = existingTags.stream().map(Tag::getTagName).collect(Collectors.toSet());
+
+		// 過濾出需要新增的 Tag name
+		List<String> newTagNames = distinctTagNames.stream().filter(name -> !existingTagNames.contains(name)).toList();
+
+		// 將新 Tag 保存進資料庫
+		List<Tag> newTags = newTagNames.isEmpty() ? Collections.emptyList()
+				: tagRepository.saveAll(newTagNames.stream().map(name -> {
+					Tag tag = new Tag();
+					tag.setTagName(name);
+					return tag;
+				}).toList());
+
+		// 合併已存在與新建 Tag
+		List<Tag> finalTags = new ArrayList<>(existingTags);
+		finalTags.addAll(newTags);
+
+		return finalTags;
 	}
 
 	/* === Update === */
 	public PostDto updatePost(Integer postId, PostDto postDto) {
 
-		Post post = EntityMapperTool.PostMapper.toEntity(postDto);
+		Post post = new Post();
 		Post savedPost = postRepository.save(post);
 
-		return EntityMapperTool.PostMapper.toDto(savedPost);
+		return PostMapper.toDto(savedPost);
 	}
 
 	/* === Delete === */
@@ -118,7 +196,7 @@ public class PostService {
 
 		postRepository.delete(post);
 
-		return EntityMapperTool.PostMapper.toDto(post);
+		return PostMapper.toDto(post);
 	}
 
 	/* === Other === */

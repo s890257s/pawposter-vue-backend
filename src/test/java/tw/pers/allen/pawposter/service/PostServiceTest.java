@@ -1,6 +1,10 @@
 package tw.pers.allen.pawposter.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileNotFoundException;
@@ -50,9 +54,9 @@ class PostServiceTest {
 		assertEquals(expectedResourceIds, actualResourceIds, "postResource id 不符");
 
 		// 檢查標籤
-		List<Integer> expectedTagIds = List.of(1, 2, 3);
-		List<Integer> actualTagIds = post.getTags().stream().map(TagDto::getTagId).toList();
-		assertEquals(expectedTagIds, actualTagIds, "tags id 不符");
+		List<String> expectedTagIds = List.of("狗狗", "公園", "玩球");
+		List<String> actualTagIds = post.getTagNames();
+		assertEquals(expectedTagIds, actualTagIds, "tags 不符");
 
 		// 檢查回覆
 		List<Integer> expectedReplyIds = List.of(1, 2);
@@ -96,6 +100,7 @@ class PostServiceTest {
 	@Test
 	void testInsertPost() {
 
+		// === 貼文 + 會員 + 標籤 + 貼文檔案 ===
 		// 建立貼文
 		PostDto postDto = new PostDto();
 		postDto.setPostText("hello world!");
@@ -116,20 +121,38 @@ class PostServiceTest {
 		}
 
 		// 設定貼文標籤
-		// 新標籤
-		TagDto newTag = new TagDto();
-		newTag.setTagName("New Tag");
+		List<String> tagNames = List.of("狗狗", "可愛", "你好世界", "HelloWorld");
+		postDto.setTagNames(tagNames);
 
-		// 既存標籤
-		TagDto exsitTag = new TagDto();
-		exsitTag.setTagId(1);
-
-		postDto.setTags(List.of(newTag, exsitTag));
-
-		System.out.println(postDto);
-		
-		// 新增 貼文 + 附件 + 作者 + 標籤
 		PostDto insertedPost = postService.insertPost(postDto);
+
+		assertNotNull(insertedPost.getMemberId(), "新增後的 member id 為空");
+		assertNotNull(insertedPost.getMemberName(), "新增後的 member name 為空");
+		assertNotNull(insertedPost.getPostId(), "新增後的 post id 為空");
+		assertNotNull(insertedPost.getPostText(), "新增後的 post text 為空");
+		assertEquals(insertedPost.getTagNames(), tagNames, "新增後的 tag name 不符");
+		assertEquals(1, insertedPost.getResources().size(), "新增後的 resource size 錯誤");
+
+		// === 測試無會員錯誤 ===
+		PostDto postWithoutMember = new PostDto();
+		postWithoutMember.setPostText("hello world!");
+
+		assertThatThrownBy(() -> postService.insertPost(postWithoutMember)) // 執行 insertPost
+				.isInstanceOf(RuntimeException.class) // 預期拋出 RuntimeException 錯誤
+				.hasMessageContaining("無法新增 post"); // 預期包含錯誤訊息"無法新增 post，因..."
+
+		// === 測試無附件 && 無標籤 ===
+		PostDto postWithoutResourcesAndTags = new PostDto();
+		postWithoutResourcesAndTags.setPostText("hello world!");
+		postWithoutResourcesAndTags.setMemberId(1);
+
+		PostDto insertedPostWithResourcesAndTags = postService.insertPost(postWithoutResourcesAndTags);
+		assertNotNull(insertedPostWithResourcesAndTags.getMemberId(), "新增後的 member id 為空");
+		assertNotNull(insertedPostWithResourcesAndTags.getMemberName(), "新增後的 member name 為空");
+		assertNotNull(insertedPostWithResourcesAndTags.getPostId(), "新增後的 post id 為空");
+		assertNotNull(insertedPostWithResourcesAndTags.getPostText(), "新增後的 post text 為空");
+		assertEquals(0, insertedPostWithResourcesAndTags.getTagNames().size(), "不應該有 tag names");
+		assertEquals(0, insertedPostWithResourcesAndTags.getResources().size(), "不應該有 resource");
 
 		log.info("PostService.insertPost 功能正常");
 	}

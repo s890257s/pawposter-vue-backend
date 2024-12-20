@@ -76,47 +76,10 @@ public class EntityMapperTool {
 			BeanUtils.copyProperties(post.getMember(), postDto);
 
 			postDto.setResources(post.getPostResources().stream().map(PostMapper::toDto).toList());
-			postDto.setTags(post.getPostTags().stream().map(pt -> TagMapper.toDto(pt.getTag())).toList());
+			postDto.setTagNames(post.getPostTags().stream().map(ps -> ps.getTag().getTagName()).toList());
 			postDto.setReplies(post.getReplies().stream().map(ReplyDto::new).toList());
 
 			return postDto;
-		}
-
-		public static Post toEntity(PostDto postDto) {
-			// 準備好 entity
-			Post post = new Post();
-			Member member = new Member();
-
-			// 複製 dto 屬性至 entity
-			BeanUtils.copyProperties(postDto, post);
-			BeanUtils.copyProperties(postDto, member);
-
-			// 根據 dto 屬性建立 postResource 集合，並設定關聯 post
-			List<PostResource> postResources = postDto.getResources().stream().map(resourceDto -> {
-				PostResource postResource = PostMapper.toEntity(resourceDto);
-				postResource.setPost(post);
-				return postResource;
-			}).toList();
-
-			// 根據 dto 屬性建立 postTag 集合，並設定關聯 post
-			List<PostTag> postTags = postDto.getTags().stream().map(tagDto -> {
-				PostTag postTag = new PostTag();
-				postTag.setPost(post);
-
-				Tag tag = new Tag();
-				tag.setTagId(tagDto.getTagId());
-				tag.setTagName(tagDto.getTagName());
-				postTag.setTag(tag);
-
-				return postTag;
-			}).toList();
-
-			// 互設關聯
-			post.setMember(member);
-			post.setPostResources(postResources);
-			post.setPostTags(postTags);
-
-			return post;
 		}
 	}
 

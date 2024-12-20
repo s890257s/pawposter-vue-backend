@@ -24,7 +24,7 @@ public class PostDto {
 
 	private List<PostResourceDto> resources = new ArrayList<>();
 
-	private List<TagDto> tags = new ArrayList<>();
+	private List<String> tagNames = new ArrayList<>();
 
 	private List<ReplyDto> replies = new ArrayList<>();
 }

@@ -2,7 +2,6 @@ package tw.pers.allen.pawposter.model.dto;
 
 import org.springframework.beans.BeanUtils;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import tw.pers.allen.pawposter.model.entity.Reply;

@@ -1,7 +1,6 @@
 package tw.pers.allen.pawposter.tools;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 
@@ -14,7 +13,6 @@ import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.MemberDetail;
 import tw.pers.allen.pawposter.model.entity.Post;
 import tw.pers.allen.pawposter.model.entity.PostResource;
-import tw.pers.allen.pawposter.model.entity.PostTag;
 import tw.pers.allen.pawposter.model.entity.Tag;
 
 public class EntityMapperTool {

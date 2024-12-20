@@ -10,12 +10,10 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
-import tw.pers.allen.pawposter.model.dto.TagDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.Post;
 import tw.pers.allen.pawposter.model.entity.PostResource;
@@ -26,7 +24,6 @@ import tw.pers.allen.pawposter.repository.PostRepository;
 import tw.pers.allen.pawposter.repository.PostTagRepository;
 import tw.pers.allen.pawposter.repository.TagRepository;
 import tw.pers.allen.pawposter.tools.EntityMapperTool.PostMapper;
-import tw.pers.allen.pawposter.tools.EntityMapperTool.TagMapper;
 
 @Service
 public class PostService {

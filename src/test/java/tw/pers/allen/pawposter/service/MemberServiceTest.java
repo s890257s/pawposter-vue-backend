@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.MemberDto;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
-import tw.pers.allen.pawposter.model.entity.MemberDetail;
 
 @SpringBootTest
 @Transactional

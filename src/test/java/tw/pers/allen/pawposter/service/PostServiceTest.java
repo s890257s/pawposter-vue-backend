@@ -3,12 +3,8 @@ package tw.pers.allen.pawposter.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -20,12 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
-import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
-import tw.pers.allen.pawposter.model.dto.TagDto;
 import tw.pers.allen.pawposter.tools.CommonTool;
 
 @SpringBootTest

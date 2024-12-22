@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		// 讀取 member 資料
 		Integer memberId = Integer.valueOf(JwtTool.getSubject(jwtToken));
-		MemberDto memberDto = memberService.findById(memberId);
+		MemberDto memberDto = memberService.getById(memberId);
 
 		// 在此次 context 中儲存驗證成功的 user
 

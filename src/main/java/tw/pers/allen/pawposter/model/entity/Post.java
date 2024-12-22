@@ -32,7 +32,7 @@ public class Post extends AbstractAuditEntity {
 
 	private Boolean isDeleted;
 
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PostResource> postResources = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER)

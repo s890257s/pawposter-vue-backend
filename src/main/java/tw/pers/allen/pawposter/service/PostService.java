@@ -45,7 +45,7 @@ public class PostService {
 	}
 
 	/* === private method === */
-	private Post getById(Integer postId) {
+	private Post findOrFail(Integer postId) {
 		return postRepository.findById(postId)
 				.orElseThrow(() -> new RuntimeException("找不到貼文。id: %s".formatted(postId)));
 	}
@@ -57,7 +57,7 @@ public class PostService {
 		postDto.setResources(Collections.emptyList());
 	}
 
-	private PostDto filterDelete(PostDto postDto) {
+	private PostDto hideDeletedContent(PostDto postDto) {
 		if (postDto.getIsDeleted()) {
 			setContentEmpty(postDto);
 		}
@@ -65,9 +65,9 @@ public class PostService {
 		return postDto;
 	}
 
-	private List<PostDto> filterDelete(List<PostDto> postDtos) {
-		postDtos.forEach(postDto->{
-			if(postDto.getIsDeleted()) {
+	private List<PostDto> hideDeletedContent(List<PostDto> postDtos) {
+		postDtos.forEach(postDto -> {
+			if (postDto.getIsDeleted()) {
 				setContentEmpty(postDto);
 			}
 		});
@@ -80,26 +80,26 @@ public class PostService {
 	/**
 	 * 跟據 id 查找 post。
 	 */
-	public PostDto findById(Integer postId) {
-		Post post = getById(postId);
+	public PostDto getById(Integer postId) {
+		Post post = findOrFail(postId);
 
-		return filterDelete(PostMapper.toDto(post));
+		return hideDeletedContent(PostMapper.toDto(post));
 	}
 
 	/**
 	 * 查找所有 posts。
 	 */
-	public List<PostDto> findAll() {
+	public List<PostDto> getAll() {
 		List<Post> posts = postRepository.findAll();
 		List<PostDto> postDtos = posts.stream().map(PostMapper::toDto).toList();
 
-		return filterDelete(postDtos);
+		return hideDeletedContent(postDtos);
 	}
 
 	/**
 	 * 根據分頁資訊查找 posts。
 	 */
-	public Page<PostDto> findByPaginated(PaginatedDto dto) {
+	public Page<PostDto> getByPaginated(PaginatedDto dto) {
 
 		/**
 		 * 建立分頁物件，依參數順序: </br>
@@ -112,14 +112,14 @@ public class PostService {
 
 		Page<Post> pagePosts = postRepository.findAll(pageRequest);
 
-		Page<PostDto> pagePostDtos = pagePosts.map(post -> filterDelete(PostMapper.toDto(post)));
+		Page<PostDto> pagePostDtos = pagePosts.map(post -> hideDeletedContent(PostMapper.toDto(post)));
 
 		return pagePostDtos;
 	}
 
 	/* === Create === */
 	@Transactional
-	public PostDto insertPost(PostDto postDto) {
+	public PostDto createPost(PostDto postDto) {
 		// STEP 1: 資料檢查
 		// member 不得為空或不存在
 		if (postDto.getMemberId() == null) {
@@ -202,7 +202,7 @@ public class PostService {
 	/* === Update === */
 	@Transactional
 	public PostDto updatePost(Integer postId, PostDto postDto) {
-		Post existingPost = getById(postId);
+		Post existingPost = findOrFail(postId);
 
 		// 更新文字
 		existingPost.setPostText(postDto.getPostText());
@@ -238,7 +238,7 @@ public class PostService {
 	@Transactional
 	public PostDto deletePost(Integer postId) {
 
-		Post post = getById(postId);
+		Post post = findOrFail(postId);
 
 		// 軟刪除
 		post.setIsDeleted(true);

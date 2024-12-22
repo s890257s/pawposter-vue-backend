@@ -25,17 +25,15 @@ public class AuthService {
 
 	public LoggedInMemberDto login(EmailAndPasswordDto emailAndPasswordDto) {
 
+		// 找不到 member 表示帳號(email) 打錯
 		Member member = memberRepository.findByMemberMail(emailAndPasswordDto.getEmail())
-				.orElseThrow(() -> new RuntimeException("登入失敗，使用者不存在。"));
-
-		// 帳號不符合
-		boolean incorrectAccount = !Objects.equals(emailAndPasswordDto.getEmail(), member.getMemberMail());
+				.orElseThrow(() -> new IncorrectAccountOrPasswordException());
 
 		// 密碼不符合
 		boolean incorrectPassword = !BCryptEncryptionTool.verify(emailAndPasswordDto.getPassword(),
 				member.getMemberPassword());
 
-		if (incorrectAccount || incorrectPassword) {
+		if (incorrectPassword) {
 			throw new IncorrectAccountOrPasswordException();
 		}
 

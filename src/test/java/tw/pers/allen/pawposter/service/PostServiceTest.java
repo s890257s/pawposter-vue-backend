@@ -37,7 +37,7 @@ class PostServiceTest {
 	void testFindById() {
 
 		// === 測試正常查找 id 與其關聯設定 ===
-		PostDto post = postService.findById(1);
+		PostDto post = postService.getById(1);
 
 		// 檢查貼文者與其內容
 		assertEquals("Alice", post.getMemberName(), "post 會員不符");
@@ -60,7 +60,7 @@ class PostServiceTest {
 		assertEquals(expectedReplyIds, actualReplyIds, "replies id 不符");
 
 		// === 測試查找刪除的貼文 ===
-		PostDto deletedPost = postService.findById(6);
+		PostDto deletedPost = postService.getById(6);
 		assertEquals("Zoe", deletedPost.getMemberName(), "post 會員不符");
 		assertEquals("此貼文已被刪除", deletedPost.getPostText(), "post 內容不符");
 
@@ -80,7 +80,7 @@ class PostServiceTest {
 	void testFindAll() {
 
 		// 測試查詢全部
-		List<PostDto> posts = postService.findAll();
+		List<PostDto> posts = postService.getAll();
 
 		assertTrue(posts.size() > 0);
 
@@ -111,13 +111,13 @@ class PostServiceTest {
 
 		// 測試查詢
 		paginatedDto = new PaginatedDto(1, 20, "ASC", "postId");
-		posts = postService.findByPaginated(paginatedDto);
+		posts = postService.getByPaginated(paginatedDto);
 		long total = posts.getTotalElements();
 		assertTrue(() -> total > 0);
 
 		// 測試分頁功能
 		paginatedDto = new PaginatedDto(1, 2, "ASC", "postId");
-		posts = postService.findByPaginated(paginatedDto);
+		posts = postService.getByPaginated(paginatedDto);
 		assertEquals("最近發現我的貓咪喜歡趴在鍵盤上，這樣我要怎麼工作啊？", posts.getContent().get(0).getPostText());
 
 		// 檢查刪除
@@ -167,20 +167,20 @@ class PostServiceTest {
 		List<String> tagNames = List.of("狗狗", "可愛", "你好世界", "HelloWorld");
 		postDto.setTagNames(tagNames);
 
-		PostDto insertedPost = postService.insertPost(postDto);
+		PostDto createdPost = postService.createPost(postDto);
 
-		assertNotNull(insertedPost.getMemberId(), "新增後的 member id 為空");
-		assertNotNull(insertedPost.getMemberName(), "新增後的 member name 為空");
-		assertNotNull(insertedPost.getPostId(), "新增後的 post id 為空");
-		assertNotNull(insertedPost.getPostText(), "新增後的 post text 為空");
-		assertEquals(insertedPost.getTagNames(), tagNames, "新增後的 tag name 不符");
-		assertEquals(1, insertedPost.getResources().size(), "新增後的 resource size 錯誤");
+		assertNotNull(createdPost.getMemberId(), "新增後的 member id 為空");
+		assertNotNull(createdPost.getMemberName(), "新增後的 member name 為空");
+		assertNotNull(createdPost.getPostId(), "新增後的 post id 為空");
+		assertNotNull(createdPost.getPostText(), "新增後的 post text 為空");
+		assertEquals(createdPost.getTagNames(), tagNames, "新增後的 tag name 不符");
+		assertEquals(1, createdPost.getResources().size(), "新增後的 resource size 錯誤");
 
 		// === 測試無會員錯誤 ===
 		PostDto postWithoutMember = new PostDto();
 		postWithoutMember.setPostText("hello world!");
 
-		assertThatThrownBy(() -> postService.insertPost(postWithoutMember)) // 執行 insertPost
+		assertThatThrownBy(() -> postService.createPost(postWithoutMember)) // 執行 createPost
 				.isInstanceOf(RuntimeException.class) // 預期拋出 RuntimeException 錯誤
 				.hasMessageContaining("無法新增 post"); // 預期包含錯誤訊息"無法新增 post，因..."
 
@@ -189,15 +189,15 @@ class PostServiceTest {
 		postWithoutResourcesAndTags.setPostText("hello world!");
 		postWithoutResourcesAndTags.setMemberId(1);
 
-		PostDto insertedPostWithResourcesAndTags = postService.insertPost(postWithoutResourcesAndTags);
-		assertNotNull(insertedPostWithResourcesAndTags.getMemberId(), "新增後的 member id 為空");
-		assertNotNull(insertedPostWithResourcesAndTags.getMemberName(), "新增後的 member name 為空");
-		assertNotNull(insertedPostWithResourcesAndTags.getPostId(), "新增後的 post id 為空");
-		assertNotNull(insertedPostWithResourcesAndTags.getPostText(), "新增後的 post text 為空");
-		assertEquals(0, insertedPostWithResourcesAndTags.getTagNames().size(), "不應該有 tag names");
-		assertEquals(0, insertedPostWithResourcesAndTags.getResources().size(), "不應該有 resource");
+		PostDto createdPostWithResourcesAndTags = postService.createPost(postWithoutResourcesAndTags);
+		assertNotNull(createdPostWithResourcesAndTags.getMemberId(), "新增後的 member id 為空");
+		assertNotNull(createdPostWithResourcesAndTags.getMemberName(), "新增後的 member name 為空");
+		assertNotNull(createdPostWithResourcesAndTags.getPostId(), "新增後的 post id 為空");
+		assertNotNull(createdPostWithResourcesAndTags.getPostText(), "新增後的 post text 為空");
+		assertEquals(0, createdPostWithResourcesAndTags.getTagNames().size(), "不應該有 tag names");
+		assertEquals(0, createdPostWithResourcesAndTags.getResources().size(), "不應該有 resource");
 
-		log.info("PostService.insertPost 功能正常");
+		log.info("PostService.createPost 功能正常");
 	}
 
 	@Test

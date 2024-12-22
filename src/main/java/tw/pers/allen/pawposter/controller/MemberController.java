@@ -33,13 +33,13 @@ public class MemberController implements BaseRestController<MemberDto> {
 	@Override
 	@GetMapping("/{id}")
 	public MemberDto getById(@PathVariable Integer id) {
-		return memberService.findById(id);
+		return memberService.getById(id);
 	}
 
 	@Override
 	@GetMapping
 	public List<MemberDto> getAll() {
-		return memberService.findAll();
+		return memberService.getAll();
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class MemberController implements BaseRestController<MemberDto> {
 	) {
 		PaginatedDto paginatedDto = new PaginatedDto(page, size, direction, sort);
 
-		return memberService.findByPaginated(paginatedDto);
+		return memberService.getByPaginated(paginatedDto);
 	}
 
 	/* === Create === */
@@ -59,7 +59,7 @@ public class MemberController implements BaseRestController<MemberDto> {
 	@Override
 	@PostMapping
 	public MemberDto create(@Valid @RequestBody MemberDto memberDto) {
-		return memberService.insertMember(memberDto);
+		return memberService.createMember(memberDto);
 	}
 
 	/* === Update === */

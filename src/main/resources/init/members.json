@@ -53,7 +53,7 @@
     "memberName": "Zoe",
     "memberMail": "zoe@mail.com",
     "memberPassword": "1234",
-    "isEnabled": "true",
+    "isEnabled": "false",
     "memberDetail": {
       "memberBirthday": "1990-04-15",
       "memberGender": "female"

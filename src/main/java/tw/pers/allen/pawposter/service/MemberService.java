@@ -24,7 +24,7 @@ public class MemberService {
 	}
 
 	/* === private method === */
-	private Member getById(Integer memberId) {
+	private Member findOrFail(Integer memberId) {
 		return memberRepository.findById(memberId)
 				.orElseThrow(() -> new RuntimeException("找不到會員。id: %s".formatted(memberId)));
 	}
@@ -34,8 +34,8 @@ public class MemberService {
 	/**
 	 * 跟據 id 查找 member。
 	 */
-	public MemberDto findById(Integer memberId) {
-		Member member = getById(memberId);
+	public MemberDto getById(Integer memberId) {
+		Member member = findOrFail(memberId);
 
 		return EntityMapperTool.MemberMapper.toDto(member);
 	}
@@ -43,7 +43,7 @@ public class MemberService {
 	/**
 	 * 查找所有 members。
 	 */
-	public List<MemberDto> findAll() {
+	public List<MemberDto> getAll() {
 		List<Member> members = memberRepository.findAll();
 		List<MemberDto> memberDtos = members.stream().map(EntityMapperTool.MemberMapper::toDto).toList();
 
@@ -53,7 +53,7 @@ public class MemberService {
 	/**
 	 * 根據分頁資訊查找 members。
 	 */
-	public Page<MemberDto> findByPaginated(PaginatedDto dto) {
+	public Page<MemberDto> getByPaginated(PaginatedDto dto) {
 
 		/**
 		 * 建立分頁物件，依參數順序: </br>
@@ -72,7 +72,7 @@ public class MemberService {
 	}
 
 	/* === Create === */
-	public MemberDto insertMember(MemberDto memberDto) {
+	public MemberDto createMember(MemberDto memberDto) {
 		Member member = EntityMapperTool.MemberMapper.toEntity(memberDto);
 
 		Member savedMember = memberRepository.save(member);
@@ -88,7 +88,7 @@ public class MemberService {
 		// 掃瞄出 null 屬性，整理成陣列
 		String[] nullPropertyNames = CommonTool.getNullPropertyNames(memberDto);
 
-		Member member = getById(memberId);
+		Member member = findOrFail(memberId);
 
 		BeanUtils.copyProperties(memberDto, member, nullPropertyNames);
 		BeanUtils.copyProperties(memberDto, member.getMemberDetail(), nullPropertyNames);
@@ -101,7 +101,7 @@ public class MemberService {
 	/* === Delete === */
 	public MemberDto deleteMember(Integer memberId) {
 
-		Member member = getById(memberId);
+		Member member = findOrFail(memberId);
 
 		memberRepository.delete(member);
 

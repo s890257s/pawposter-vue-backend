@@ -30,11 +30,11 @@ class MemberServiceTest {
 	void testFindById() {
 
 		// 測試正常查找 id
-		MemberDto member = memberService.findById(1);
+		MemberDto member = memberService.getById(1);
 		assertEquals("Alice", member.getMemberName());
 
 		// 測試異常查找 id
-		assertThatThrownBy(() -> memberService.findById(-1)) // 執行 findById(-1)
+		assertThatThrownBy(() -> memberService.getById(-1)) // 執行 findById(-1)
 				.isInstanceOf(RuntimeException.class) // 預期拋出 RuntimeException 錯誤
 				.hasMessageContaining("找不到會員"); // 預期包含錯誤訊息"找不到會員"
 
@@ -45,7 +45,7 @@ class MemberServiceTest {
 	void testFindAll() {
 
 		// 測試查詢全部
-		List<MemberDto> members = memberService.findAll();
+		List<MemberDto> members = memberService.getAll();
 
 		assertTrue(members.size() > 0);
 
@@ -61,13 +61,13 @@ class MemberServiceTest {
 
 		// 測試查詢
 		paginatedDto = new PaginatedDto(1, 20, "ASC", "memberId");
-		members = memberService.findByPaginated(paginatedDto);
+		members = memberService.getByPaginated(paginatedDto);
 		long total = members.getTotalElements();
 		assertTrue(() -> total > 0);
 
 		// 測試分頁功能
 		paginatedDto = new PaginatedDto(1, 2, "ASC", "memberId");
-		members = memberService.findByPaginated(paginatedDto);
+		members = memberService.getByPaginated(paginatedDto);
 		assertEquals("Carol", members.getContent().get(0).getMemberName());
 
 		log.info("MemberService.findByPaginated 功能正常");
@@ -81,13 +81,13 @@ class MemberServiceTest {
 		memberDto.setMemberName("Jim");
 		memberDto.setMemberGender("male");
 
-		MemberDto savedMember = memberService.insertMember(memberDto);
-		MemberDto foundMember = memberService.findById(savedMember.getMemberId());
+		MemberDto savedMember = memberService.createMember(memberDto);
+		MemberDto foundMember = memberService.getById(savedMember.getMemberId());
 
 		assertEquals(memberDto.getMemberName(), foundMember.getMemberName());
 		assertEquals(memberDto.getMemberGender(), foundMember.getMemberGender());
 
-		log.info("MemberService.insertMember 功能正常");
+		log.info("MemberService.createMember 功能正常");
 	}
 
 	@Test
@@ -108,12 +108,12 @@ class MemberServiceTest {
 	void testDeleteMember() {
 
 		// 測試刪除
-		int initialMemberCount = memberService.findAll().size();
+		int initialMemberCount = memberService.getAll().size();
 
 		MemberDto expectedDeletedMember = memberService.deleteMember(1);
 		assertEquals("Alice", expectedDeletedMember.getMemberName());
 
-		int finalMemberCount = memberService.findAll().size();
+		int finalMemberCount = memberService.getAll().size();
 
 		assertEquals(initialMemberCount - 1, finalMemberCount);
 

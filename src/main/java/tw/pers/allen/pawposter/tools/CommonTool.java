@@ -16,9 +16,15 @@ public class CommonTool {
 	/**
 	 * 將圖片的 byte[] 轉換成 base64 格式的圖片
 	 */
-	public static String convertByteArrayToBase64String(byte[] data) throws IOException {
+	public static String convertByteArrayToBase64String(byte[] data) {
 
-		String mimeType = guessMimeType(data);
+		String mimeType;
+		try {
+			mimeType = guessMimeType(data);
+		} catch (IOException e) {
+			mimeType = "image/png";
+			e.printStackTrace();
+		}
 
 		String base64String = Base64.getEncoder().encodeToString(data);
 

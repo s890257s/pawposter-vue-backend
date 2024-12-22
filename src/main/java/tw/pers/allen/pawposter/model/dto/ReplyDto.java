@@ -12,6 +12,9 @@ public class ReplyDto {
 
 	public ReplyDto(Reply reply) {
 		BeanUtils.copyProperties(reply, this);
+
+		this.memberId = reply.getMember().getMemberId();
+		this.memberName = reply.getMember().getMemberName();
 	}
 
 	private Integer replyId;
@@ -19,4 +22,8 @@ public class ReplyDto {
 	private String replyText;
 
 	private Boolean isDeleted;
+
+	private Integer memberId;
+
+	private String memberName;
 }

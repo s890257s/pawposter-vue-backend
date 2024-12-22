@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.Post;
 import tw.pers.allen.pawposter.model.entity.PostResource;
@@ -57,10 +58,20 @@ public class PostService {
 		postDto.setResources(Collections.emptyList());
 	}
 
+	private void setContentEmpty(ReplyDto replyDto) {
+		replyDto.setReplyText("此回覆已被刪除");
+	}
+
 	private PostDto hideDeletedContent(PostDto postDto) {
 		if (postDto.getIsDeleted()) {
 			setContentEmpty(postDto);
 		}
+
+		postDto.getReplies().forEach(replyDto -> {
+			if (replyDto.getIsDeleted()) {
+				setContentEmpty(replyDto);
+			}
+		});
 
 		return postDto;
 	}
@@ -70,6 +81,13 @@ public class PostService {
 			if (postDto.getIsDeleted()) {
 				setContentEmpty(postDto);
 			}
+
+			postDto.getReplies().forEach(replyDto -> {
+				if (replyDto.getIsDeleted()) {
+					setContentEmpty(replyDto);
+				}
+			});
+
 		});
 
 		return postDtos;

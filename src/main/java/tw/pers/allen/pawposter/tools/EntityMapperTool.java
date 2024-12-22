@@ -58,6 +58,12 @@ public class EntityMapperTool {
 		public static PostResourceDto toDto(PostResource postResource) {
 			PostResourceDto postResourceDto = new PostResourceDto();
 			BeanUtils.copyProperties(postResource, postResourceDto);
+
+			byte[] content = postResource.getResourceContent();
+			if (content != null && content.length != 0) {
+				postResourceDto.setContent(CommonTool.convertByteArrayToBase64String(content));
+			}
+
 			return postResourceDto;
 		}
 

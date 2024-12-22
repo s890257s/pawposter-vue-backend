@@ -15,6 +15,6 @@ public class PostResourceDto {
 
 	private String mimeType;
 
-	private byte[] resourceContent;
+	private String content;
 
 }

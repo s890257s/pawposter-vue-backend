@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostDto;
-import tw.pers.allen.pawposter.service.MemberService;
+import tw.pers.allen.pawposter.service.PostService;
 
 @RestController
 @RequestMapping("/api/posts")
 public class PostController implements BaseRestController<PostDto> {
 
-	private final MemberService memberService;
+	private final PostService postService;
 
-	public PostController(MemberService memberService) {
-		this.memberService = memberService;
+	public PostController(PostService postService) {
+		this.postService = postService;
 	}
 
 	/* === Read === */
@@ -33,13 +33,13 @@ public class PostController implements BaseRestController<PostDto> {
 	@Override
 	@GetMapping("/{id}")
 	public PostDto getById(@PathVariable Integer id) {
-		return null;
+		return postService.getById(id);
 	}
 
 	@Override
-	@GetMapping()
+	@GetMapping
 	public List<PostDto> getAll() {
-		return null;
+		return postService.getAll();
 	}
 
 	@Override
@@ -47,35 +47,35 @@ public class PostController implements BaseRestController<PostDto> {
 	public Page<PostDto> getPaginatedByConditions(@RequestParam(defaultValue = "0") Integer page, // 當前頁面
 			@RequestParam(defaultValue = "20") Integer size, // 每頁顯示筆數
 			@RequestParam(defaultValue = "ASC") String direction, // 升冪 asc 或降冪 desc
-			@RequestParam(defaultValue = "memberId") String sort // 排序欄位
+			@RequestParam(defaultValue = "postId") String sort // 排序欄位
 	) {
 		PaginatedDto paginatedDto = new PaginatedDto(page, size, direction, sort);
 
-		return null;
+		return postService.getByPaginated(paginatedDto);
 	}
 
 	/* === Create === */
 
 	@Override
-	@PostMapping()
-	public PostDto create(@Valid @RequestBody PostDto memberDto) {
-		return null;
+	@PostMapping
+	public PostDto create(@Valid @RequestBody PostDto postDto) {
+		return postService.createPost(postDto);
 	}
 
 	/* === Update === */
 
 	@Override
-	@PutMapping("/{memberId}")
-	public PostDto update(@PathVariable Integer memberId, @Valid @RequestBody PostDto memberDto) {
-		return null;
+	@PutMapping("/{postId}")
+	public PostDto update(@PathVariable Integer postId, @Valid @RequestBody PostDto postDto) {
+		return postService.updatePost(postId, postDto);
 	}
 
 	/* === Delete === */
 
 	@Override
-	@DeleteMapping("/{memberId}")
-	public PostDto delete(@PathVariable Integer memberId) {
-		return null;
+	@DeleteMapping("/{postId}")
+	public PostDto delete(@PathVariable Integer postId) {
+		return postService.deletePost(postId);
 	}
 
 	/* === Other === */

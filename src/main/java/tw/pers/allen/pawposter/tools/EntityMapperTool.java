@@ -1,6 +1,6 @@
 package tw.pers.allen.pawposter.tools;
 
-import java.io.IOException;
+import java.util.Base64;
 
 import org.springframework.beans.BeanUtils;
 
@@ -30,11 +30,7 @@ public class EntityMapperTool {
 				return memberDto;
 			}
 
-			try {
-				memberDto.setMemberPhoto(CommonTool.convertByteArrayToBase64String(photo));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			memberDto.setMemberPhoto(CommonTool.convertByteArrayToBase64String(photo));
 
 			return memberDto;
 		}
@@ -70,6 +66,9 @@ public class EntityMapperTool {
 		public static PostResource toEntity(PostResourceDto postResourceDto) {
 			PostResource postResource = new PostResource();
 			BeanUtils.copyProperties(postResourceDto, postResource);
+			byte[] content = Base64.getDecoder().decode(postResourceDto.getContent().split(",")[1]);
+			postResource.setResourceContent(content);
+
 			return postResource;
 		}
 

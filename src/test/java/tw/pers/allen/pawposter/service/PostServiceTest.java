@@ -135,8 +135,7 @@ class PostServiceTest {
 			// 檢查回覆
 			assertEquals(0, post.getReplies().size(), "replies 數量不符");
 		});
-		
-		
+
 		log.info("PostService.findByPaginated 功能正常");
 	}
 
@@ -156,7 +155,7 @@ class PostServiceTest {
 			// 設定貼文圖片
 			byte[] photo = FileCopyUtils.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\post-1-1.jpg"));
 			PostResourceDto postResourceDto = new PostResourceDto();
-			postResourceDto.setResourceContent(photo);
+			postResourceDto.setContent(CommonTool.convertByteArrayToBase64String(photo));
 			postResourceDto.setMimeType(CommonTool.guessMimeType(photo));
 			postDto.setResources(List.of(postResourceDto));
 		} catch (Exception e) {
@@ -214,13 +213,13 @@ class PostServiceTest {
 			byte[] p1 = FileCopyUtils
 					.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\frontend_no_image.png"));
 			PostResourceDto postResourceDto1 = new PostResourceDto();
-			postResourceDto1.setResourceContent(p1);
+			postResourceDto1.setContent(CommonTool.convertByteArrayToBase64String(p1));
 			postResourceDto1.setMimeType(CommonTool.guessMimeType(p1));
 
 			byte[] p2 = FileCopyUtils
 					.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\frontend_sing_up_image.png"));
 			PostResourceDto postResourceDto2 = new PostResourceDto();
-			postResourceDto2.setResourceContent(p2);
+			postResourceDto2.setContent(CommonTool.convertByteArrayToBase64String(p2));
 			postResourceDto2.setMimeType(CommonTool.guessMimeType(p2));
 
 			postDto.setResources(List.of(postResourceDto1, postResourceDto2));

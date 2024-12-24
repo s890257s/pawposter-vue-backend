@@ -58,5 +58,134 @@
   {
     "post": { "postId": "5" },
     "tag": { "tagId": "1" }
+  },
+  {
+    "post": { "postId": "7" },
+    "tag": { "tagId": "1" }
+  },
+  {
+    "post": { "postId": "7" },
+    "tag": { "tagId": "13" }
+  },
+
+  {
+    "post": { "postId": "8" },
+    "tag": { "tagId": "7" }
+  },
+  {
+    "post": { "postId": "8" },
+    "tag": { "tagId": "14" }
+  },
+  {
+    "post": { "postId": "9" },
+    "tag": { "tagId": "4" }
+  },
+  {
+    "post": { "postId": "9" },
+    "tag": { "tagId": "13" }
+  },
+
+  {
+    "post": { "postId": "10" },
+    "tag": { "tagId": "2" }
+  },
+  {
+    "post": { "postId": "11" },
+    "tag": { "tagId": "1" }
+  },
+  {
+    "post": { "postId": "11" },
+    "tag": { "tagId": "12" }
+  },
+  {
+    "post": { "postId": "12" },
+    "tag": { "tagId": "11" }
+  },
+  {
+    "post": { "postId": "13" },
+    "tag": { "tagId": "13" }
+  },
+  {
+    "post": { "postId": "13" },
+    "tag": { "tagId": "7" }
+  },
+  {
+    "post": { "postId": "14" },
+    "tag": { "tagId": "14" }
+  },
+
+  {
+    "post": { "postId": "15" },
+    "tag": { "tagId": "1" }
+  },
+
+  {
+    "post": { "postId": "16" },
+    "tag": { "tagId": "10" }
+  },
+  {
+    "post": { "postId": "16" },
+    "tag": { "tagId": "11" }
+  },
+
+  {
+    "post": { "postId": "17" },
+    "tag": { "tagId": "7" }
+  },
+  {
+    "post": { "postId": "17" },
+    "tag": { "tagId": "13" }
+  },
+
+  {
+    "post": { "postId": "18" },
+    "tag": { "tagId": "7" }
+  },
+
+  {
+    "post": { "postId": "18" },
+    "tag": { "tagId": "5" }
+  },
+
+  {
+    "post": { "postId": "19" },
+    "tag": { "tagId": "1" }
+  },
+
+  {
+    "post": { "postId": "19" },
+    "tag": { "tagId": "11" }
+  },
+  {
+    "post": { "postId": "20" },
+    "tag": { "tagId": "14" }
+  },
+  {
+    "post": { "postId": "21" },
+    "tag": { "tagId": "5" }
+  },
+  {
+    "post": { "postId": "22" },
+    "tag": { "tagId": "10" }
+  },
+  {
+    "post": { "postId": "23" },
+    "tag": { "tagId": "1" }
+  },
+  {
+    "post": { "postId": "23" },
+    "tag": { "tagId": "5" }
+  },
+  {
+    "post": { "postId": "24" },
+    "tag": { "tagId": "6" }
+  },
+  {
+    "post": { "postId": "24" },
+    "tag": { "tagId": "7" }
+  },
+  {
+    "post": { "postId": "25" },
+    "tag": { "tagId": "5" }
   }
 ]

@@ -22,6 +22,8 @@ public class PostDto {
 
 	private String memberName;
 
+	private String memberPhoto;
+	
 	private Boolean isDeleted;
 
 	private List<PostResourceDto> resources = new ArrayList<>();

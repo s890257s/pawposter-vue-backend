@@ -13,6 +13,7 @@ import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.MemberDetail;
 import tw.pers.allen.pawposter.model.entity.Post;
 import tw.pers.allen.pawposter.model.entity.PostResource;
+import tw.pers.allen.pawposter.model.entity.Reply;
 import tw.pers.allen.pawposter.model.entity.Tag;
 
 public class EntityMapperTool {
@@ -78,9 +79,12 @@ public class EntityMapperTool {
 			BeanUtils.copyProperties(post, postDto);
 			BeanUtils.copyProperties(post.getMember(), postDto);
 
+			postDto.setMemberPhoto(
+					CommonTool.convertByteArrayToBase64String(post.getMember().getMemberDetail().getMemberPhoto()));
+
 			postDto.setResources(post.getPostResources().stream().map(PostMapper::toDto).toList());
 			postDto.setTagNames(post.getPostTags().stream().map(ps -> ps.getTag().getTagName()).toList());
-			postDto.setReplies(post.getReplies().stream().map(ReplyDto::new).toList());
+			postDto.setReplies(post.getReplies().stream().map(ReplyMapper::toDto).toList());
 
 			return postDto;
 		}
@@ -102,6 +106,27 @@ public class EntityMapperTool {
 			BeanUtils.copyProperties(tagDto, tag);
 
 			return tag;
+		}
+	}
+
+	public static class ReplyMapper {
+		public static ReplyDto toDto(Reply reply) {
+			ReplyDto replyDto = new ReplyDto();
+
+			BeanUtils.copyProperties(reply, replyDto);
+			replyDto.setMemberPhoto(
+					CommonTool.convertByteArrayToBase64String(reply.getMember().getMemberDetail().getMemberPhoto()));
+
+			return replyDto;
+		}
+
+		public static Reply toEntity(ReplyDto replyDto) {
+
+			Reply reply = new Reply();
+
+			BeanUtils.copyProperties(replyDto, reply);
+
+			return reply;
 		}
 	}
 }

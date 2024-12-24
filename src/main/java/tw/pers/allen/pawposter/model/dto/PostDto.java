@@ -1,7 +1,10 @@
 package tw.pers.allen.pawposter.model.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +28,9 @@ public class PostDto {
 	private String memberPhoto;
 	
 	private Boolean isDeleted;
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date createdDate;
 
 	private List<PostResourceDto> resources = new ArrayList<>();
 

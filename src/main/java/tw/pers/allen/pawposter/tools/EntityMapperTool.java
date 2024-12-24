@@ -116,7 +116,8 @@ public class EntityMapperTool {
 			BeanUtils.copyProperties(reply, replyDto);
 			replyDto.setMemberPhoto(
 					CommonTool.convertByteArrayToBase64String(reply.getMember().getMemberDetail().getMemberPhoto()));
-
+			replyDto.setMemberName(reply.getMember().getMemberName());
+			
 			return replyDto;
 		}
 

@@ -13,6 +13,6 @@ public class LoggedInMemberDto {
 
 	private String memberMail;
 
-	private byte[] memberPhoto;
+	private String memberPhoto;
 
 }

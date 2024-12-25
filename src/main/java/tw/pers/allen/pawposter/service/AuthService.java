@@ -12,6 +12,7 @@ import tw.pers.allen.pawposter.model.dto.LoggedInMemberDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.repository.MemberRepository;
 import tw.pers.allen.pawposter.tools.BCryptEncryptionTool;
+import tw.pers.allen.pawposter.tools.CommonTool;
 import tw.pers.allen.pawposter.tools.JwtTool;
 
 @Service
@@ -51,7 +52,8 @@ public class AuthService {
 		LoggedInMemberDto loggedInMemberDto = new LoggedInMemberDto();
 		loggedInMemberDto.setMemberMail(member.getMemberMail());
 		loggedInMemberDto.setMemberName(member.getMemberName());
-		loggedInMemberDto.setMemberPhoto(member.getMemberDetail().getMemberPhoto());
+		loggedInMemberDto
+				.setMemberPhoto(CommonTool.convertByteArrayToBase64String(member.getMemberDetail().getMemberPhoto()));
 		loggedInMemberDto.setJwtToken(JwtTool.generateToken(member.getMemberId().toString()));
 
 		return loggedInMemberDto;

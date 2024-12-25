@@ -69,13 +69,12 @@ public class GlobalExceptionHandler {
 	// jwt 過期 > 401
 	@ExceptionHandler(ExpiredJwtException.class)
 	public ResponseEntity<String> handleJwtExpiredException(Exception exception) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body("jwt token 已過期，請重新登入。Message:" + exception.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("jwt token 已過期，請重新登入。");
 	}
 
 	// jwt 解析錯誤 > 401
 	@ExceptionHandler(JwtException.class)
 	public ResponseEntity<String> handleClaimJwtException(Exception exception) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("jwt token 不合法。Message:" + exception.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("jwt token 不合法。");
 	}
 }

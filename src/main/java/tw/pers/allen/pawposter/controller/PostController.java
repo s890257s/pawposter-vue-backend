@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
-import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.PostUploadDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.service.PostService;
 
 @RestController
 @RequestMapping("/api/posts")
-public class PostController implements BaseRestController<PostDto> {
+public class PostController {
 
 	private final PostService postService;
 
@@ -30,21 +31,18 @@ public class PostController implements BaseRestController<PostDto> {
 
 	/* === Read === */
 
-	@Override
 	@GetMapping("/{id}")
-	public PostDto getById(@PathVariable Integer id) {
+	public PostViewDto getById(@PathVariable Integer id) {
 		return postService.getById(id);
 	}
 
-	@Override
 	@GetMapping
-	public List<PostDto> getAll() {
+	public List<PostViewDto> getAll() {
 		return postService.getAll();
 	}
 
-	@Override
 	@GetMapping("/page")
-	public Page<PostDto> getPaginatedByConditions(@RequestParam(defaultValue = "0") Integer page, // 當前頁面
+	public Page<PostViewDto> getPaginatedByConditions(@RequestParam(defaultValue = "0") Integer page, // 當前頁面
 			@RequestParam(defaultValue = "20") Integer size, // 每頁顯示筆數
 			@RequestParam(defaultValue = "ASC") String direction, // 升冪 asc 或降冪 desc
 			@RequestParam(defaultValue = "postId") String sort // 排序欄位
@@ -56,25 +54,24 @@ public class PostController implements BaseRestController<PostDto> {
 
 	/* === Create === */
 
-	@Override
 	@PostMapping
-	public PostDto create(@Valid @RequestBody PostDto postDto) {
-		return postService.createPost(postDto);
+	public PostViewDto create(PostUploadDto postUploadDto) {
+
+		System.out.println(postUploadDto);
+		return null;
 	}
 
 	/* === Update === */
 
-	@Override
 	@PutMapping("/{postId}")
-	public PostDto update(@PathVariable Integer postId, @Valid @RequestBody PostDto postDto) {
+	public PostViewDto update(@PathVariable Integer postId, @Valid @RequestBody PostViewDto postDto) {
 		return postService.updatePost(postId, postDto);
 	}
 
 	/* === Delete === */
 
-	@Override
 	@DeleteMapping("/{postId}")
-	public PostDto delete(@PathVariable Integer postId) {
+	public PostViewDto delete(@PathVariable Integer postId) {
 		return postService.deletePost(postId);
 	}
 

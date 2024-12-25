@@ -5,7 +5,7 @@ import java.util.Base64;
 import org.springframework.beans.BeanUtils;
 
 import tw.pers.allen.pawposter.model.dto.MemberDto;
-import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.model.dto.TagDto;
@@ -73,8 +73,8 @@ public class EntityMapperTool {
 			return postResource;
 		}
 
-		public static PostDto toDto(Post post) {
-			PostDto postDto = new PostDto();
+		public static PostViewDto toDto(Post post) {
+			PostViewDto postDto = new PostViewDto();
 
 			BeanUtils.copyProperties(post, postDto);
 			BeanUtils.copyProperties(post.getMember(), postDto);

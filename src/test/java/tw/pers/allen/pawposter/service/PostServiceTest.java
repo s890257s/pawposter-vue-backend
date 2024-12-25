@@ -19,7 +19,7 @@ import org.springframework.util.ResourceUtils;
 
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
-import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.tools.CommonTool;
@@ -37,7 +37,7 @@ class PostServiceTest {
 	void testFindById() {
 
 		// === 測試正常查找 id 與其關聯設定 ===
-		PostDto post = postService.getById(1);
+		PostViewDto post = postService.getById(1);
 
 		// 檢查貼文者與其內容
 		assertEquals("Alice", post.getMemberName(), "post 會員不符");
@@ -60,7 +60,7 @@ class PostServiceTest {
 		assertEquals(expectedReplyIds, actualReplyIds, "replies id 不符");
 
 		// === 測試查找刪除的貼文 ===
-		PostDto deletedPost = postService.getById(6);
+		PostViewDto deletedPost = postService.getById(6);
 		assertEquals("Zoe", deletedPost.getMemberName(), "post 會員不符");
 		assertEquals("此貼文已被刪除", deletedPost.getPostText(), "post 內容不符");
 
@@ -80,12 +80,12 @@ class PostServiceTest {
 	void testFindAll() {
 
 		// 測試查詢全部
-		List<PostDto> posts = postService.getAll();
+		List<PostViewDto> posts = postService.getAll();
 
 		assertTrue(posts.size() > 0);
 
 		// 檢查刪除
-		List<PostDto> deletedPosts = posts.stream().filter(PostDto::getIsDeleted).toList();
+		List<PostViewDto> deletedPosts = posts.stream().filter(PostViewDto::getIsDeleted).toList();
 
 		deletedPosts.forEach(post -> {
 			assertEquals("此貼文已被刪除", post.getPostText(), "post 內容不符");
@@ -107,7 +107,7 @@ class PostServiceTest {
 	void testfindByPaginated() {
 
 		PaginatedDto paginatedDto;
-		Page<PostDto> posts;
+		Page<PostViewDto> posts;
 
 		// 測試查詢
 		paginatedDto = new PaginatedDto(1, 20, "ASC", "postId");
@@ -121,7 +121,7 @@ class PostServiceTest {
 		assertEquals("最近發現我的貓咪喜歡趴在鍵盤上，這樣我要怎麼工作啊？", posts.getContent().get(0).getPostText());
 
 		// 檢查刪除
-		List<PostDto> deletedPosts = posts.stream().filter(PostDto::getIsDeleted).toList();
+		List<PostViewDto> deletedPosts = posts.stream().filter(PostViewDto::getIsDeleted).toList();
 
 		deletedPosts.forEach(post -> {
 			assertEquals("此貼文已被刪除", post.getPostText(), "post 內容不符");
@@ -144,7 +144,7 @@ class PostServiceTest {
 
 		// === 貼文 + 會員 + 標籤 + 貼文檔案 ===
 		// 建立貼文
-		PostDto postDto = new PostDto();
+		PostViewDto postDto = new PostViewDto();
 		postDto.setPostText("hello world!");
 
 		// 設定貼文者
@@ -166,7 +166,7 @@ class PostServiceTest {
 		List<String> tagNames = List.of("狗狗", "可愛", "你好世界", "HelloWorld");
 		postDto.setTagNames(tagNames);
 
-		PostDto createdPost = postService.createPost(postDto);
+		PostViewDto createdPost = postService.createPost(postDto);
 
 		assertNotNull(createdPost.getMemberId(), "新增後的 member id 為空");
 		assertNotNull(createdPost.getMemberName(), "新增後的 member name 為空");
@@ -176,7 +176,7 @@ class PostServiceTest {
 		assertEquals(1, createdPost.getResources().size(), "新增後的 resource size 錯誤");
 
 		// === 測試無會員錯誤 ===
-		PostDto postWithoutMember = new PostDto();
+		PostViewDto postWithoutMember = new PostViewDto();
 		postWithoutMember.setPostText("hello world!");
 
 		assertThatThrownBy(() -> postService.createPost(postWithoutMember)) // 執行 createPost
@@ -184,11 +184,11 @@ class PostServiceTest {
 				.hasMessageContaining("無法新增 post"); // 預期包含錯誤訊息"無法新增 post，因..."
 
 		// === 測試無附件 && 無標籤 ===
-		PostDto postWithoutResourcesAndTags = new PostDto();
+		PostViewDto postWithoutResourcesAndTags = new PostViewDto();
 		postWithoutResourcesAndTags.setPostText("hello world!");
 		postWithoutResourcesAndTags.setMemberId(1);
 
-		PostDto createdPostWithResourcesAndTags = postService.createPost(postWithoutResourcesAndTags);
+		PostViewDto createdPostWithResourcesAndTags = postService.createPost(postWithoutResourcesAndTags);
 		assertNotNull(createdPostWithResourcesAndTags.getMemberId(), "新增後的 member id 為空");
 		assertNotNull(createdPostWithResourcesAndTags.getMemberName(), "新增後的 member name 為空");
 		assertNotNull(createdPostWithResourcesAndTags.getPostId(), "新增後的 post id 為空");
@@ -204,7 +204,7 @@ class PostServiceTest {
 	void testUpdatePost() {
 		// === 測試全更新 ===
 		// 建立更新物件
-		PostDto postDto = new PostDto();
+		PostViewDto postDto = new PostViewDto();
 		postDto.setPostText("更新貼文");
 
 		// 設定新圖片
@@ -231,7 +231,7 @@ class PostServiceTest {
 		List<String> tagNames = List.of("兔兔", "貪吃鬼", "更新", "UpdatePost");
 		postDto.setTagNames(tagNames);
 
-		PostDto updatedPost = postService.updatePost(1, postDto);
+		PostViewDto updatedPost = postService.updatePost(1, postDto);
 		assertEquals(1, updatedPost.getMemberId(), "更新後的 member id 不該改變");
 		assertEquals("Alice", updatedPost.getMemberName(), "更新後的 member name 不該改變");
 		assertEquals(1, updatedPost.getPostId(), "更新後的 post id 不該改變");
@@ -245,7 +245,7 @@ class PostServiceTest {
 	@Test
 	void testDeletePost() {
 
-		PostDto deletePost = postService.deletePost(1);
+		PostViewDto deletePost = postService.deletePost(1);
 
 		assertTrue(deletePost.getIsDeleted());
 

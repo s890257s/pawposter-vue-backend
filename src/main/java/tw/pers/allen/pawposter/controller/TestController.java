@@ -3,10 +3,12 @@ package tw.pers.allen.pawposter.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import tw.pers.allen.pawposter.model.dto.MemberDto;
-import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.service.MemberService;
 import tw.pers.allen.pawposter.service.PostService;
 
@@ -30,8 +32,13 @@ public class TestController {
 	}
 
 	@GetMapping("/test/d/{id}")
-	public PostDto test(@PathVariable Integer id) {
+	public PostViewDto test(@PathVariable Integer id) {
 		return postService.getById(id);
 	}
 
+	@PostMapping("/test/fff")
+	public void t(MultipartFile f) {
+	System.out.println(f);
+	
+	}
 }

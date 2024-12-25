@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
-import tw.pers.allen.pawposter.model.dto.PostDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.model.entity.Member;
 import tw.pers.allen.pawposter.model.entity.Post;
@@ -51,7 +51,7 @@ public class PostService {
 				.orElseThrow(() -> new RuntimeException("找不到貼文。id: %s".formatted(postId)));
 	}
 
-	private void setContentEmpty(PostDto postDto) {
+	private void setContentEmpty(PostViewDto postDto) {
 		postDto.setPostText("此貼文已被刪除");
 		postDto.setTagNames(Collections.emptyList());
 		postDto.setReplies(Collections.emptyList());
@@ -62,7 +62,7 @@ public class PostService {
 		replyDto.setReplyText("此回覆已被刪除");
 	}
 
-	private PostDto hideDeletedContent(PostDto postDto) {
+	private PostViewDto hideDeletedContent(PostViewDto postDto) {
 		if (postDto.getIsDeleted()) {
 			setContentEmpty(postDto);
 		}
@@ -76,7 +76,7 @@ public class PostService {
 		return postDto;
 	}
 
-	private List<PostDto> hideDeletedContent(List<PostDto> postDtos) {
+	private List<PostViewDto> hideDeletedContent(List<PostViewDto> postDtos) {
 		postDtos.forEach(postDto -> {
 			if (postDto.getIsDeleted()) {
 				setContentEmpty(postDto);
@@ -93,12 +93,46 @@ public class PostService {
 		return postDtos;
 	}
 
+	/**
+	 * 將標籤名稱轉換成對應的 Tag Entity
+	 */
+	private List<Tag> getTags(List<String> tagNames) {
+		if (tagNames == null) {
+			return Collections.emptyList();
+		}
+
+		// 去除重複並清理字串
+		List<String> distinctTagNames = tagNames.stream().filter(Objects::nonNull).map(String::trim)
+				.filter(name -> !name.isEmpty()).distinct().toList();
+
+		if (distinctTagNames.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		// 查詢已存在的 Tag
+		List<Tag> existingTags = tagRepository.findByTagNameIn(distinctTagNames);
+		Set<String> existingTagNames = existingTags.stream().map(Tag::getTagName).collect(Collectors.toSet());
+
+		// 過濾出需要新增的 Tag name
+		List<String> newTagNames = distinctTagNames.stream().filter(name -> !existingTagNames.contains(name)).toList();
+
+		// 將新 Tag 保存進資料庫
+		List<Tag> newTags = newTagNames.isEmpty() ? Collections.emptyList()
+				: tagRepository.saveAll(newTagNames.stream().map(Tag::new).toList());
+
+		// 合併已存在與新建 Tag
+		List<Tag> finalTags = new ArrayList<>(existingTags);
+		finalTags.addAll(newTags);
+
+		return finalTags;
+	}
+
 	/* === Read === */
 
 	/**
 	 * 跟據 id 查找 post。
 	 */
-	public PostDto getById(Integer postId) {
+	public PostViewDto getById(Integer postId) {
 		Post post = findOrFail(postId);
 
 		return hideDeletedContent(PostMapper.toDto(post));
@@ -107,9 +141,9 @@ public class PostService {
 	/**
 	 * 查找所有 posts。
 	 */
-	public List<PostDto> getAll() {
+	public List<PostViewDto> getAll() {
 		List<Post> posts = postRepository.findAll();
-		List<PostDto> postDtos = posts.stream().map(PostMapper::toDto).toList();
+		List<PostViewDto> postDtos = posts.stream().map(PostMapper::toDto).toList();
 
 		return hideDeletedContent(postDtos);
 	}
@@ -117,7 +151,7 @@ public class PostService {
 	/**
 	 * 根據分頁資訊查找 posts。
 	 */
-	public Page<PostDto> getByPaginated(PaginatedDto dto) {
+	public Page<PostViewDto> getByPaginated(PaginatedDto dto) {
 
 		/**
 		 * 建立分頁物件，依參數順序: </br>
@@ -130,14 +164,14 @@ public class PostService {
 
 		Page<Post> pagePosts = postRepository.findAll(pageRequest);
 
-		Page<PostDto> pagePostDtos = pagePosts.map(post -> hideDeletedContent(PostMapper.toDto(post)));
+		Page<PostViewDto> pagePostDtos = pagePosts.map(post -> hideDeletedContent(PostMapper.toDto(post)));
 
 		return pagePostDtos;
 	}
 
 	/* === Create === */
 	@Transactional
-	public PostDto createPost(PostDto postDto) {
+	public PostViewDto createPost(Integer memberId,PostViewDto postDto) {
 		// STEP 1: 資料檢查
 		// member 不得為空或不存在
 		if (postDto.getMemberId() == null) {
@@ -183,43 +217,9 @@ public class PostService {
 		return PostMapper.toDto(savedPost);
 	}
 
-	/**
-	 * 將標籤名稱轉換成對應的 Tag Entity
-	 */
-	private List<Tag> getTags(List<String> tagNames) {
-		if (tagNames == null) {
-			return Collections.emptyList();
-		}
-
-		// 去除重複並清理字串
-		List<String> distinctTagNames = tagNames.stream().filter(Objects::nonNull).map(String::trim)
-				.filter(name -> !name.isEmpty()).distinct().toList();
-
-		if (distinctTagNames.isEmpty()) {
-			return Collections.emptyList();
-		}
-
-		// 查詢已存在的 Tag
-		List<Tag> existingTags = tagRepository.findByTagNameIn(distinctTagNames);
-		Set<String> existingTagNames = existingTags.stream().map(Tag::getTagName).collect(Collectors.toSet());
-
-		// 過濾出需要新增的 Tag name
-		List<String> newTagNames = distinctTagNames.stream().filter(name -> !existingTagNames.contains(name)).toList();
-
-		// 將新 Tag 保存進資料庫
-		List<Tag> newTags = newTagNames.isEmpty() ? Collections.emptyList()
-				: tagRepository.saveAll(newTagNames.stream().map(Tag::new).toList());
-
-		// 合併已存在與新建 Tag
-		List<Tag> finalTags = new ArrayList<>(existingTags);
-		finalTags.addAll(newTags);
-
-		return finalTags;
-	}
-
 	/* === Update === */
 	@Transactional
-	public PostDto updatePost(Integer postId, PostDto postDto) {
+	public PostViewDto updatePost(Integer postId, PostViewDto postDto) {
 		Post existingPost = findOrFail(postId);
 
 		// 更新文字
@@ -254,7 +254,7 @@ public class PostService {
 
 	/* === Delete === */
 	@Transactional
-	public PostDto deletePost(Integer postId) {
+	public PostViewDto deletePost(Integer postId) {
 
 		Post post = findOrFail(postId);
 

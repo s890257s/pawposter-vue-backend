@@ -1,12 +1,14 @@
 package tw.pers.allen.pawposter.tools;
 
+import java.io.IOException;
 import java.util.Base64;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import tw.pers.allen.pawposter.model.dto.MemberDto;
-import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.model.dto.TagDto;
 import tw.pers.allen.pawposter.model.entity.Member;
@@ -73,6 +75,18 @@ public class EntityMapperTool {
 			return postResource;
 		}
 
+		public static PostResource toEntity(MultipartFile file) {
+			PostResource postResource = new PostResource();
+
+			try {
+				postResource.setResourceContent(file.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return postResource;
+		}
+
 		public static PostViewDto toDto(Post post) {
 			PostViewDto postDto = new PostViewDto();
 
@@ -107,6 +121,7 @@ public class EntityMapperTool {
 
 			return tag;
 		}
+		
 	}
 
 	public static class ReplyMapper {
@@ -117,7 +132,7 @@ public class EntityMapperTool {
 			replyDto.setMemberPhoto(
 					CommonTool.convertByteArrayToBase64String(reply.getMember().getMemberDetail().getMemberPhoto()));
 			replyDto.setMemberName(reply.getMember().getMemberName());
-			
+
 			return replyDto;
 		}
 

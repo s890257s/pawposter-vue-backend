@@ -1,5 +1,6 @@
 package tw.pers.allen.pawposter.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,7 @@ public class PostUploadDto {
 
 	private String text;
 
-	private List<MultipartFile> files;
+	private List<MultipartFile> files = new ArrayList<>();
 
-	private List<String> tags;
+	private List<String> tags = new ArrayList<>();
 }

@@ -35,10 +35,4 @@ public class TestController {
 	public PostViewDto test(@PathVariable Integer id) {
 		return postService.getById(id);
 	}
-
-	@PostMapping("/test/fff")
-	public void t(MultipartFile f) {
-	System.out.println(f);
-	
-	}
 }

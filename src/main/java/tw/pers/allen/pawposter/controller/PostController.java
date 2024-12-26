@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import tw.pers.allen.pawposter.model.dto.MemberDto;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
 import tw.pers.allen.pawposter.model.dto.PostUploadDto;
 import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.service.PostService;
+import tw.pers.allen.pawposter.tools.LoggedInMemberTool;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -56,23 +58,14 @@ public class PostController {
 
 	@PostMapping
 	public PostViewDto create(PostUploadDto postUploadDto) {
-
-		System.out.println(postUploadDto);
-		return null;
-	}
-
-	/* === Update === */
-
-	@PutMapping("/{postId}")
-	public PostViewDto update(@PathVariable Integer postId, @Valid @RequestBody PostViewDto postDto) {
-		return postService.updatePost(postId, postDto);
+		return postService.createPost(LoggedInMemberTool.getLoggedInMemberId(), postUploadDto);
 	}
 
 	/* === Delete === */
 
 	@DeleteMapping("/{postId}")
 	public PostViewDto delete(@PathVariable Integer postId) {
-		return postService.deletePost(postId);
+		return postService.deletePost(LoggedInMemberTool.getLoggedInMemberId(), postId);
 	}
 
 	/* === Other === */

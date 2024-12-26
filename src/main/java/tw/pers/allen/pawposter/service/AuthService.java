@@ -54,7 +54,8 @@ public class AuthService {
 		loggedInMemberDto
 				.setMemberPhoto(CommonTool.convertByteArrayToBase64String(member.getMemberDetail().getMemberPhoto()));
 		loggedInMemberDto.setJwtToken(JwtTool.generateToken(member.getMemberId().toString()));
+		loggedInMemberDto.setMemberId(member.getMemberId());
 
-		return loggedInMemberDto;
+		return loggedInMemberDto; 
 	}
 }

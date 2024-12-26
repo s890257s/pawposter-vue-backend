@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import tw.pers.allen.pawposter.exception.runtime.AccessDeniedException;
 import tw.pers.allen.pawposter.exception.runtime.AccountDisabledException;
 import tw.pers.allen.pawposter.exception.runtime.IncorrectAccountOrPasswordException;
 
@@ -25,6 +26,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InsufficientAuthenticationException.class)
 	public ResponseEntity<String> handleInsufficientAuthenticationException(Exception exception) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("未登入或無權存取此資源。");
+	}
+
+	/* === 權限不足(例如刪除別人的貼文) === */
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<String> AccessDeniedException(Exception exception) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("你無權執行此操作");
 	}
 
 	/* === 請求參數檢驗失敗(null 或空白) === */

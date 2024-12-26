@@ -9,6 +9,8 @@ public class LoggedInMemberDto {
 
 	private String jwtToken;
 
+	private Integer memberId;
+
 	private String memberName;
 
 	private String memberMail;

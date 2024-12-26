@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +15,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
-import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.PostResourceDto;
+import tw.pers.allen.pawposter.model.dto.PostUploadDto;
+import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.tools.CommonTool;
 
@@ -144,29 +148,22 @@ class PostServiceTest {
 
 		// === 貼文 + 會員 + 標籤 + 貼文檔案 ===
 		// 建立貼文
-		PostViewDto postDto = new PostViewDto();
-		postDto.setPostText("hello world!");
-
-		// 設定貼文者
-		postDto.setMemberId(1);
-		postDto.setMemberName("Alice");
+		PostUploadDto postDto = new PostUploadDto();
+		postDto.setText("hello world!");
 
 		try {
 			// 設定貼文圖片
 			byte[] photo = FileCopyUtils.copyToByteArray(ResourceUtils.getFile("classpath:init\\image\\post-1-1.jpg"));
-			PostResourceDto postResourceDto = new PostResourceDto();
-			postResourceDto.setContent(CommonTool.convertByteArrayToBase64String(photo));
-			postResourceDto.setMimeType(CommonTool.guessMimeType(photo));
-			postDto.setResources(List.of(postResourceDto));
+			postDto.setFiles(List.of(new MockMultipartFile("test", photo)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		// 設定貼文標籤
 		List<String> tagNames = List.of("狗狗", "可愛", "你好世界", "HelloWorld");
-		postDto.setTagNames(tagNames);
+		postDto.setTags(tagNames);
 
-		PostViewDto createdPost = postService.createPost(postDto);
+		PostViewDto createdPost = postService.createPost(1, postDto);
 
 		assertNotNull(createdPost.getMemberId(), "新增後的 member id 為空");
 		assertNotNull(createdPost.getMemberName(), "新增後的 member name 為空");
@@ -175,26 +172,17 @@ class PostServiceTest {
 		assertEquals(createdPost.getTagNames(), tagNames, "新增後的 tag name 不符");
 		assertEquals(1, createdPost.getResources().size(), "新增後的 resource size 錯誤");
 
-		// === 測試無會員錯誤 ===
-		PostViewDto postWithoutMember = new PostViewDto();
-		postWithoutMember.setPostText("hello world!");
-
-		assertThatThrownBy(() -> postService.createPost(postWithoutMember)) // 執行 createPost
-				.isInstanceOf(RuntimeException.class) // 預期拋出 RuntimeException 錯誤
-				.hasMessageContaining("無法新增 post"); // 預期包含錯誤訊息"無法新增 post，因..."
-
 		// === 測試無附件 && 無標籤 ===
-		PostViewDto postWithoutResourcesAndTags = new PostViewDto();
-		postWithoutResourcesAndTags.setPostText("hello world!");
-		postWithoutResourcesAndTags.setMemberId(1);
+		PostUploadDto postWithoutResourcesAndTags = new PostUploadDto();
+		postWithoutResourcesAndTags.setText("hello world!");
 
-		PostViewDto createdPostWithResourcesAndTags = postService.createPost(postWithoutResourcesAndTags);
-		assertNotNull(createdPostWithResourcesAndTags.getMemberId(), "新增後的 member id 為空");
-		assertNotNull(createdPostWithResourcesAndTags.getMemberName(), "新增後的 member name 為空");
-		assertNotNull(createdPostWithResourcesAndTags.getPostId(), "新增後的 post id 為空");
-		assertNotNull(createdPostWithResourcesAndTags.getPostText(), "新增後的 post text 為空");
-		assertEquals(0, createdPostWithResourcesAndTags.getTagNames().size(), "不應該有 tag names");
-		assertEquals(0, createdPostWithResourcesAndTags.getResources().size(), "不應該有 resource");
+		PostViewDto createdPostWithoutResourcesAndTags = postService.createPost(1, postWithoutResourcesAndTags);
+		assertNotNull(createdPostWithoutResourcesAndTags.getMemberId(), "新增後的 member id 為空");
+		assertNotNull(createdPostWithoutResourcesAndTags.getMemberName(), "新增後的 member name 為空");
+		assertNotNull(createdPostWithoutResourcesAndTags.getPostId(), "新增後的 post id 為空");
+		assertNotNull(createdPostWithoutResourcesAndTags.getPostText(), "新增後的 post text 為空");
+		assertEquals(0, createdPostWithoutResourcesAndTags.getTagNames().size(), "不應該有 tag names");
+		assertEquals(0, createdPostWithoutResourcesAndTags.getResources().size(), "不應該有 resource");
 
 		log.info("PostService.createPost 功能正常");
 	}
@@ -245,7 +233,7 @@ class PostServiceTest {
 	@Test
 	void testDeletePost() {
 
-		PostViewDto deletePost = postService.deletePost(1);
+		PostViewDto deletePost = postService.deletePost(1, 1);
 
 		assertTrue(deletePost.getIsDeleted());
 

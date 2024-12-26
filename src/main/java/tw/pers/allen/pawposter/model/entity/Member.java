@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tw.pers.allen.pawposter.model.audit.AbstractAuditEntity;
 
@@ -22,7 +23,12 @@ import tw.pers.allen.pawposter.model.audit.AbstractAuditEntity;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Member extends AbstractAuditEntity {
+
+	public Member(Integer memberId) {
+		this.memberId = memberId;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

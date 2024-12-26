@@ -12,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import tw.pers.allen.pawposter.exception.runtime.AccessDeniedException;
 import tw.pers.allen.pawposter.model.dto.PaginatedDto;
+import tw.pers.allen.pawposter.model.dto.PostUploadDto;
 import tw.pers.allen.pawposter.model.dto.PostViewDto;
 import tw.pers.allen.pawposter.model.dto.ReplyDto;
 import tw.pers.allen.pawposter.model.entity.Member;
@@ -171,33 +173,21 @@ public class PostService {
 
 	/* === Create === */
 	@Transactional
-	public PostViewDto createPost(Integer memberId,PostViewDto postDto) {
-		// STEP 1: 資料檢查
-		// member 不得為空或不存在
-		if (postDto.getMemberId() == null) {
-			throw new RuntimeException("無法新增 post，因傳入的 member id 為空");
-		}
-
-		memberRepository.findById(postDto.getMemberId()).orElseThrow(
-				() -> new RuntimeException("無法新增 post，因找不到對應的 member。member id: %s".formatted(postDto.getMemberId())));
-
-		// STEP 2: 新增
+	public PostViewDto createPost(Integer memberId, PostUploadDto postDto) {
 		// 建立 Post 實體
 		Post post = new Post();
-		post.setPostText(postDto.getPostText());
-
-		Member member = new Member();
-		member.setMemberId(postDto.getMemberId());
-		post.setMember(member);
+		post.setPostText(postDto.getText());
+		post.setIsDeleted(false);
+		post.setMember(new Member(memberId));
 
 		// 設定 Post 附帶檔案
-		List<PostResource> postResources = postDto.getResources().stream() // 流化
+		List<PostResource> postResources = postDto.getFiles().stream() // 流化
 				.map(PostMapper::toEntity) // 轉換成實體
 				.peek(r -> r.setPost(post)).toList(); // 設定關聯
 		post.setPostResources(postResources);
 
 		// 標籤處理
-		List<Tag> tags = getTags(postDto.getTagNames());
+		List<Tag> tags = getTags(postDto.getTags());
 
 		// 建立 Post 與 Tag 關聯
 		List<PostTag> postTags = tags.stream().map(tag -> {
@@ -211,6 +201,7 @@ public class PostService {
 		// 保存 Post
 		Post savedPost = postRepository.save(post);
 
+		// 取得對應的 member 資料
 		Member m = memberRepository.findById(savedPost.getMember().getMemberId()).get();
 		savedPost.setMember(m);
 
@@ -254,9 +245,14 @@ public class PostService {
 
 	/* === Delete === */
 	@Transactional
-	public PostViewDto deletePost(Integer postId) {
+	public PostViewDto deletePost(Integer memberId, Integer postId) {
 
 		Post post = findOrFail(postId);
+
+		// id 不符合，表示想刪掉別人的貼文，拋出權限不足錯誤
+		if (memberId != post.getMember().getMemberId()) {
+			throw new AccessDeniedException();
+		}
 
 		// 軟刪除
 		post.setIsDeleted(true);

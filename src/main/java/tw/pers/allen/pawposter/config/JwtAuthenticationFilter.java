@@ -1,8 +1,12 @@
 package tw.pers.allen.pawposter.config;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -54,7 +58,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		Integer memberId = Integer.valueOf(JwtTool.getSubject(jwtToken));
 		MemberDto memberDto = memberService.getById(memberId);
 
-		// 在此次 context 中儲存驗證成功的 user
+		// 若管理員則給予管理員權限
+		Set<SimpleGrantedAuthority> auths = new HashSet<>();
+		if (Objects.equals(memberId, 1)) {
+			auths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		}
+
 
 		/**
 		 * UsernamePasswordAuthenticationToken 為 Spring Security 設計用於表示已認證身份的標準物件 </br>
@@ -63,7 +72,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		 * 參數三: 權限列表物件
 		 */
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-				memberDto, null, null);
+				memberDto, null, auths);
+		
+		// 在此次 context 中儲存驗證成功的 user
 		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
 		// 繼續執行過濾鏈
